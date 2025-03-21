@@ -1,0 +1,221 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  line-height: 1;
+}
+
+body {
+  font-family:
+    "Inter",
+    -apple-system,
+    Roboto,
+    Helvetica,
+    sans-serif;
+  overflow-x: hidden;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+.page-container {
+  background-color: #ffffff;
+  width: 100%;
+  overflow: hidden;
+}
+
+.content-wrapper {
+  width: 100%;
+  background-color: #ffffff;
+}
+
+.main-header {
+  background-color: #219ebc;
+  display: flex;
+  width: 100%;
+  padding: 12px 58px;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+
+
+.logo-container {
+  align-self: stretch;
+}
+
+.logo-text {
+  color: #ffffff;
+  font-size: 35px;
+  font-family:
+    "Fredoka One",
+    -apple-system,
+    Roboto,
+    Helvetica,
+    sans-serif;
+  font-weight: 400;
+}
+
+
+
+.tagline {
+  color: #fb8500;
+  font-size: 7px;
+  font-family:
+    "Inter",
+    -apple-system,
+    Roboto,
+    Helvetica,
+    sans-serif;
+  font-weight: 700;
+  margin-top: 9px;
+}
+
+.header-actions {
+  align-self: stretch;
+  display: flex;
+  margin-top: auto;
+  margin-bottom: auto;
+  align-items: stretch;
+  gap: 27px;
+  font-family:
+    "Inter",
+    -apple-system,
+    Roboto,
+    Helvetica,
+    sans-serif;
+  font-size: 10px;
+  color: #fb8500;
+  font-weight: 700;
+}
+
+.login-button {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  aspect-ratio: 2;
+  padding: 15px 17px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #fb8500;
+  font-family:
+    "Inter",
+    -apple-system,
+    Roboto,
+    Helvetica,
+    sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.button-bg {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.login-text {
+  position: relative;
+  z-index: 1;
+}
+
+
+.container {
+  width: 100%;
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"] {
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  transition: border 0.3s ease;
+  width: 100%;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="tel"]:focus {
+  border: 1px solid #219ebc;
+  outline: none;
+}
+
+
+.radio-group {
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+input[type="radio"] {
+  margin-right: 5px;
+}
+
+label {
+  font-size: 16px;
+  margin-right: 20px;
+  cursor: pointer;
+}
+
+
+input[type="submit"] {
+  padding: 14px;
+  background-color: #219ebc;
+  color: #fff;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+input[type="submit"]:hover {
+  background-color: #198fb6;
+}
+
+
+
+
+form {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+form input,
+form .radio-group {
+  margin-bottom: 20px;
+}
+
+.form-title {
+  text-align: center; 
+  font-size: 24px;
+  font-weight: 700;
+  color: #219ebc; 
+  margin-bottom: 20px; 
+}
