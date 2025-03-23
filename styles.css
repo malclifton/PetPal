@@ -25,7 +25,7 @@ ul {
 }
 
 .page-container {
-  background-color: #ffffff;
+  background-color: #ffffffe0;
   width: 100%;
   overflow: hidden;
 }
@@ -96,6 +96,32 @@ ul {
   color: #fb8500;
   font-weight: 700;
 }
+@media (max-width: 768px) {
+  .main-header {
+    padding: 12px 20px;
+  }
+
+  .logo-text {
+    font-size: 30px;
+  }
+
+  .form-title {
+    font-size: 20px;
+  }
+
+  .container {
+    width: 90%;
+  }
+
+  .form-image {
+    max-width: 100%;
+  }
+
+  .header-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
 
 .login-button {
   display: flex;
@@ -106,7 +132,7 @@ ul {
   border: none;
   background: transparent;
   cursor: pointer;
-  color: #fb8500;
+  color: white;
   font-family:
     "Inter",
     -apple-system,
@@ -115,6 +141,12 @@ ul {
     sans-serif;
   font-size: 14px;
   font-weight: 700;
+}
+.login-button:hover {
+    color: #fb8500;
+}
+.login-button:focus {
+  outline: 3px solid #fb8500;
 }
 
 .button-bg {
@@ -130,7 +162,6 @@ ul {
   position: relative;
   z-index: 1;
 }
-
 
 .container {
   width: 100%;
@@ -170,6 +201,30 @@ input[type="tel"]:focus {
   align-items: center;
   margin-bottom: 20px;
 }
+.radio-input {
+    display: none;
+}
+.radio-label {
+    cursor: pointer;
+    font-size: 16px; 
+    margin-right: 20px;
+    display: inline-flex;
+    align-items: center;
+    padding: 10px;
+    transition: all 0.3s ease;
+}
+
+.radio-input:checked + .radio-label {
+    color: #fb8500; 
+}
+
+.radio-label:hover {
+    transform: scale(1.1); 
+}
+
+.radio-label i {
+    margin-right: 10px;
+  }
 
 input[type="radio"] {
   margin-right: 5px;
@@ -185,7 +240,7 @@ label {
 input[type="submit"] {
   padding: 14px;
   background-color: #219ebc;
-  color: #fff;
+  color: white;
   font-size: 16px;
   border: none;
   border-radius: 4px;
@@ -195,10 +250,8 @@ input[type="submit"] {
 }
 
 input[type="submit"]:hover {
-  background-color: #198fb6;
+  background-color: #fb8500;
 }
-
-
 
 
 form {
@@ -218,4 +271,16 @@ form .radio-group {
   font-weight: 700;
   color: #219ebc; 
   margin-bottom: 20px; 
+}
+.image-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-image {
+    width: 100%; 
+    max-width: 400px; 
+    height: auto;
+    border-radius: 10px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
 }

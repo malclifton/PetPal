@@ -1,80 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PetPal - For All Your Pet Needs</title>
-    <link rel="stylesheet" href="styles.css" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Inter:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
-  </head>
 
-  <body>
-    <header class="main-header">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PetPal - For All Your Pet Needs</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Inter:wght@400;700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+</head>
+
+<body>
+  <header class="main-header">
+    <a href="index.html" class="logo-link">
       <div class="logo-container">
         <h1 class="logo-text">petpal</h1>
         <p class="tagline">F O R A L L Y O U R P E T N E E D S</p>
       </div>
+    </a>
 
-      <div class="header-actions">
-        <button
-          class="login-button"
-          onclick="window.location.href = './signUp.html';"
-        >
-          <span class="login-text">Register</span>
-        </button>
-        <button
-          class="login-button"
-          onclick="window.location.href = './signIn.html';"
-        >
-          <span class="login-text">Login</span>
-        </button>
-      </div>
-    </header>
+    <div class="header-actions">
+      <button class="login-button" onclick="window.location.href = './signUp.html';" aria-label="Register">
+        <span class="login-text">Register</span>
+      </button>
+      <button class="login-button" onclick="window.location.href = './signIn.html';" aria-label="Login">
+        <span class="login-text">Login</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="image-container">
+      <img src="./img/5.jpg" alt="PetPal Image" class="form-image">
+    </div>
 
     <div class="container">
       <h2 class="form-title">Create an Account</h2>
       <form action="./signUp.php" method="post">
-        <input
-          type="text"
-          id="fullName"
-          name="fullName"
-          placeholder="Full Name"
-        />
-        <input
-          type="email"
-          id="email"
-          name="email"
-          placeholder="Email Address"
-        />
-        <input
-          type="password"
-          id="password"
-          name="password"
-          placeholder="Password"
-        />
-        <input
-          type="tel"
-          id="phoneNumber"
-          name="phoneNumber"
-          placeholder="Phone Number"
-        />
+        <input type="text" id="fullName" name="fullName" placeholder="Full Name" />
+        <input type="email" id="email" name="email" placeholder="Email Address" />
+        <input type="password" id="password" name="password" placeholder="Password" />
+        <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="Phone Number" />
         <div class="radio-group">
-          <input type="radio" id="role" name="owner" value="Owner" />
-          <label for="owner">Pet Owner</label>
-          <input type="radio" id="role" name="sitter" value="Sitter" />
-          <label for="sitter">Pet Sitter</label>
+          <input type="radio" id="owner" name="role" value="Owner" class="radio-input" />
+          <label for="owner" class="radio-label"><i class="fas fa-dog"></i> Pet Owner</label>
+
+          <input type="radio" id="sitter" name="role" value="Sitter" class="radio-input" />
+          <label for="sitter" class="radio-label"><i class="fas fa-users	"></i> Pet Sitter</label>
         </div>
-        <input
-          type="submit"
-          id="submit"
-          name="submit"
-          value="Submit"
-          class="btn"
-        />
+        <input type="submit" id="submit" name="submit" value="Submit" class="btn" />
       </form>
     </div>
-  </body>
+</body>
+
 </html>
