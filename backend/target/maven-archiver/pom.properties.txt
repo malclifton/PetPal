@@ -1,0 +1,3 @@
+artifactId=pawgrammers
+groupId=com.pawgrammers
+version=0.0.1-SNAPSHOT
