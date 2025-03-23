@@ -47,10 +47,13 @@ $dbname = "";
 
 // Connect to database
 $conn = new mysqli($host, $user, $pass, $dbname);
-
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    echo "Could not connect to server\n";
+    die("connection failed: " . $conn->connect_error);
+} else {
+    echo "Connection established\n";
 }
+echo mysqli_get_server_info($conn) . "\n";
 
 // Prepare SQL statement 
 $stmt = $conn->prepare("INSERT INTO users (name, email, password_hash, phone, role) VALUES (?, ?, ?, ?, ?)");
@@ -63,5 +66,9 @@ if ($stmt->execute()) {
     $conn->close();
     exit;
 } else {
-    die("Error: " . $stmt->error);
+    if ($conn->errno == 1062) {
+        die("Error: This email already registered. Try a different email.");
+    } else {
+        die("Error: " . $stmt->error);
+    }
 }
