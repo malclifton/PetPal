@@ -1,0 +1,8 @@
+*.class
+.txt
+config.php
+
+backend/target/
+backend/target/classes/application.properties.txt
+backend/src/main/resources/application.properties.txt
+
