@@ -1,11 +1,18 @@
 <?php
+$config = require __DIR__ . '/config.php';
+
+$db_host = $config['db_host'];
+$db_user = $config['db_user'];
+$db_pass = $config['db_pass'];
+$db_name = $config['db_name'];
 
 // Form data
 $fullName = trim($_POST["fullName"]);
 $email = trim($_POST["email"]);
 $password = $_POST["password"];
 $phoneNumber = trim($_POST["phoneNumber"]);
-$role = isset($_POST["owner"]) ? "Owner" : (isset($_POST["sitter"]) ? "Sitter" : "User");
+$role = $_POST["role"];
+//$role = isset($_POST["owner"]) ? "owner" : (isset($_POST["sitter"]) ? "sitter" : "User");
 
 // Password Hash
 $password_hash = password_hash($password, PASSWORD_DEFAULT);
@@ -39,14 +46,10 @@ if (!preg_match("/^\d+$/", $phoneNumber)) {
     die("Phone number can only contain digits.");
 }
 
-// Database credentials
-$host = "localhost";
-$user = "";
-$pass = "";
-$dbname = "";
+
 
 // Connect to database
-$conn = new mysqli($host, $user, $pass, $dbname);
+$conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
 if ($conn->connect_error) {
     echo "Could not connect to server\n";
     die("connection failed: " . $conn->connect_error);
