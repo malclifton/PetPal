@@ -12,7 +12,6 @@ $email = trim($_POST["email"]);
 $password = $_POST["password"];
 $phoneNumber = trim($_POST["phoneNumber"]);
 $role = $_POST["role"];
-//$role = isset($_POST["owner"]) ? "owner" : (isset($_POST["sitter"]) ? "sitter" : "User");
 
 // Password Hash
 $password_hash = password_hash($password, PASSWORD_DEFAULT);

@@ -45,3 +45,23 @@ CREATE TABLE pet_profiles (
     FOREIGN KEY (pet_id) REFERENCES pets(pet_id) ON DELETE CASCADE
 );
 
+CREATE TABLE pet_notifications (
+    notification_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    pet_id INT NOT NULL,
+    message TEXT NOT NULL,
+    send_time DATETIME NOT NULL,
+    status ENUM('unread', 'read') DEFAULT 'unread',
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (pet_id) REFERENCES pets(pet_id)
+);
+CREATE TABLE pet_notifications (
+    notification_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    pet_id INT NOT NULL,
+    message TEXT NOT NULL,
+    send_time DATETIME NOT NULL,
+    status ENUM('unread', 'read') DEFAULT 'unread',
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (pet_id) REFERENCES pets(pet_id)
+);
