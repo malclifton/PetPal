@@ -1,5 +1,5 @@
 :root {
-  --color-primary: #0000FF;
+  --color-primary: #219ebc;
   --color-danger: #ff7782;
   --color-success: #41f1b6;
   --color-warning: #ffbb55;
@@ -7,7 +7,7 @@
   --color-info-dark: #7d8da1;
   --color-dark: #363949;
   --color-light: rgba(152, 157, 202, 0.18);
-  --color-primary-variant: #111e88;
+  --color-primary-variant: #219ebc;
   --color-dark-variant: #677483;
   --color-background: #f6f6f9;
 
@@ -137,8 +137,33 @@ aside .logo{
   gap: 0.8rem;
 }
 aside .logo img{
-  width: 2rem;
-  height: 2rem;
+  width: 4rem;
+  height: 4rem;
+}
+.logo-container {
+  align-self: stretch;
+}
+
+.logo-text {
+  color: #219ebc;
+  font-size: 27px;
+  font-family: "Inter",
+    -apple-system,
+    Roboto,
+    Helvetica,
+    sans-serif;
+}
+
+.tagline {
+  color: #fb8500;
+  font-size: 7px;
+  font-family: "Inter",
+    -apple-system,
+    Roboto,
+    Helvetica,
+    sans-serif;
+  font-weight: 700;
+  margin-top: 9px;
 }
 aside .close{
   display: none;
