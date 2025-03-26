@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang = "en">
+  <head>
+    <meta charset = "UTF-8">
+    <meta http-equiv = "X-UA-Compatible" content = "IE-edge">
+    <meta name = "viewport" content = "width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>PetPal - For All Your Pet Needs</title>
+    <!--Material Icons-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp"
+    rel="stylesheet">
+  </head>
+  <body>
+    <div class="container">
+      <aside>
+        <div class="top">
+          <div class="logo">
+            <img src = "./images/logo.png">
+            <h2>PetPal</h2>
+          </div>
+          <div class="close" id="close-btn">
+            <span class="material-icons-sharp">close</span>
+          </div>
+        </div>
+        <div class="sidebar">
+          <a href="#" class="active">
+            <span class="material-icons-sharp">home</span>
+            <h3>Dashboard</h3>
+          </a>
+          <a href="#">
+            <span class="material-icons-sharp">pets</span>
+            <h3>View Requests</h3>
+          </a>
+          <a href="#">
+            <span class="material-icons-sharp">edit_calendar</span>
+            <h3>Manage Tasks</h3>
+          </a>
+          <a href="#">
+            <span class="material-icons-sharp">notifications_active</span>
+            <h3>Alerts/Reminders</h3>
+          </a>
+          <a href="#">
+            <span class="material-icons-sharp">help</span>
+            <h3>Support Center</h3>
+          </a>
+          <a href="#">
+            <span class="material-icons-sharp">logout</span>
+            <h3>Logout</h3>
+          </a>
+        </div>
+      </aside>
+      <!------------------End of Aside--------------------->
+      <main>
+        <h1>Dashboard</h1>
+
+        <div class="date">
+          <input type="date">
+        </div>
+
+        <div class="info">
+          <div class="requests">
+            <span class="material-icons-sharp">pets</span>
+            <div class="middle">
+              <h3>Requests</h3>
+              <h1>PlaceHolder for database</h1>
+            </div>
+            <small class="text-muted">Last 24 hours</small>
+          </div>
+          <!--------End of Request---------->
+          <div class="tasks">
+            <span class="material-icons-sharp">edit_calendar</span>
+            <div class="middle">
+              <h3>Tasks</h3>
+              <h1>PlaceHolder for database</h1>
+            </div>
+            <small class="text-muted">Last 24 hours</small>
+          </div>
+      <!----End of Tasks------------->
+          <div class="reminders">
+            <span class="material-icons-sharp">notifications_active</span>
+            <div class="middle">
+              <h3>Reminders</h3>
+              <h1>PlaceHolder for database</h1>
+            </div>
+            <small class="text-muted">Last 24 hours</small>
+          </div>
+          <!-----End of Reminders------>
+        </div>
+        <!--------End of info-------->
+        <div class="recent-pet">
+          <h2>Pets</h2>
+          <script>
+          // JavaScript code for fetching and updating the table
+            function fetchData() {
+              fetch('fetch_data.php')
+              .then(response => response.json())
+              .then(data => {
+                const table = document.getElementById('petTable');
+                table.innerHTML = ''; // Clear existing rows
+
+                data.forEach(row => {
+                  const tr = document.createElement('tr');
+                  Object.values(row).forEach(value => {
+                    const td = document.createElement('td');
+                    td.textContent = value;
+                    tr.appendChild(td);
+                  });
+                  table.appendChild(tr);
+                });
+              });
+            }
+
+                  // Fetch data periodically
+            setInterval(fetchData, 5000);
+          </script>
+          <table id="petTable">
+            <thead>
+              <tr>
+                <th>Pet Name</th>
+                <th>Pet Owner</th>
+              </tr>
+            </thead>
+            <tbody>
+          <!-- Rows will be dynamically added here -->
+            </tbody>
+          </table>
+          <a href="#">Show All</a>
+        </div>
+      </main>
+      <!-------End of Main------>
+
+      <div class="right">
+        <div class="top">
+          <button id="menu-btn">
+            <span class="material-icons-sharp">menu</span>
+          </button>
+          <div class="theme-toggler">
+            <span class="material-icons-sharp active">light_mode</span>
+            <span class="material-icons-sharp">dark_mode</span>
+          </div>
+          <div class="profile">
+            <div class="profile-info">
+              <p>Greetings, <b>Sitter</b></p>
+              <small class="text-muted">Sitter</small>
+            </div>
+            <div>
+              <div class="profile-photo">
+                <img src=".\images\profile_pic.png">
+              </div>
+            </div>
+          </div>
+          <!---End of top----->
+          <div class="recent-notifications">
+            <h2>Recent Notifications</h2>
+            <div class="notifications">
+              <div class="notification">
+                <div class="profile">
+                  <img src=".\images\profile_pic.png">
+                </div>
+                <div class="message">
+                  <p><b>Owner 4</b>wants her dog walked at 4 pm.</p>
+                  <small class="text-muted">2 minutes ago</small>
+                </div>
+              </div>
+              <div class="notification">
+                <div class="profile">
+                  <img src=".\images\profile_pic.png">
+                </div>
+                <div class="message">
+                  <p><b>Owner 1</b>wants their cat fed at 6 am.</p>
+                  <small class="text-muted">20 minutes ago</small>
+                </div>
+              </div>
+              <div class="notification">
+                <div class="profile">
+                  <img src=".\images\profile_pic.png">
+                </div>
+                <div class="message">
+                  <p><b>Owner 3</b>wants his dog groomed at 4 pm Tuesday.</p>
+                  <small class="text-muted">10 hours ago</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-----End of Recent Notifications------->
+        </div>
+      </div>
+    </div>
+    <script src="./index.js"></script>
+  </body>
+</html>
