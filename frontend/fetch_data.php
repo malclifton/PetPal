@@ -15,7 +15,7 @@ if ($conn->connect_error) {
 }
 
 // Fetch data from table
-$sql = "SELECT name.pets, owner_id FROM pets"; 
+$sql = "SELECT name, owner_id FROM pets"; 
 $result = $conn->query($sql);
 
 // Create an array to store the data
