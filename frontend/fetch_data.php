@@ -1,11 +1,13 @@
 <?php
-$servername = "Local instance MySQL80"; // Replace with your server's name or IP address
-$username = "root";       // Your database username
-$password = "carti";           // Your database password
-$dbname = "petSitterApp"; // The name of your database
+$config = require __DIR__ . '/config.php';
+
+$db_host = $config['db_host'];
+$db_user = $config['db_user'];
+$db_pass = $config['db_pass'];
+$db_name = $config['db_name'];
 
 // Create a connection to the database
-$conn = new mysqli($servername, $username, $password, $dbname);
+$conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
 
 // Check the connection
 if ($conn->connect_error) {

@@ -56,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION["user_email"] = $user["email"];
 
             // Go to dashboard 
-            header("Location: PUT DASHBOARD HERE ");
+            header("Location:petSitterDashboard.html");
             exit;
         } else {
             // Invalid password
