@@ -1,4 +1,4 @@
-package com.petpal.notifications;
+package com.pawgrammers.notifications;
 
 import java.time.LocalDateTime;
 

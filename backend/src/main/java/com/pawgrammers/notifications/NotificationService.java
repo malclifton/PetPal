@@ -1,4 +1,4 @@
-package com.petpal.notifications;
+package com.pawgrammers.notifications;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
