@@ -54,15 +54,17 @@ ul {
 
 .logo-text {
   color: #ffffff;
-  font-size: 27px;
-  font-family: "Inter",
+  font-size: 35px;
+  font-family:
+    "Fredoka One",
     -apple-system,
     Roboto,
     Helvetica,
     sans-serif;
+  font-weight: 400;
 }
 
-.logo-container img{
+.logo img{
   width: 4rem;
   height: 4rem;
 }
