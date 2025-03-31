@@ -48,3 +48,4 @@ build/
 #Ignore sensitive files
 application.properties
 .env
+.env
