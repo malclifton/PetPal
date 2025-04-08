@@ -9,7 +9,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Inter:wght@400;700&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-  <script src="https://kit.fontawesome.com/3efec73f4e.js" crossorigin="anonymous"></script>
+  <script src="https://kit.fontawesome.com/3efec73f4e.js" crossorigin="anonymous">
+
+  </script>
 </head>
 
 <body>
@@ -38,7 +40,7 @@
 
     <div class="container">
       <h2 class="form-title">Create an Account</h2>
-      <form action="./signUp.php" method="post">
+      <form action="./php/signUp.php" method="post" enctype="multipart/form-data">
         <input type="text" id="fullName" name="fullName" placeholder="Full Name" />
         <input type="email" id="email" name="email" placeholder="Email Address" />
         <input type="password" id="password" name="password" placeholder="Password" />
@@ -50,9 +52,41 @@
           <input type="radio" id="sitter" name="role" value="Sitter" class="radio-input" />
           <label for="sitter" class="radio-label"><i class="fas fa-users	"></i> Pet Sitter</label>
         </div>
+        <div id="ownerFields" class="role-fields" style="display: none;">
+          <input type="text" name="ownerAddress" placeholder="Home Address" />
+          <label for="ownerProfileImage">Profile Image</label>
+          <input type="file" id="ownerProfileImage" name="ownerProfileImage" accept="image/*" />
+        </div>
+
+        <div id="sitterFields" class="role-fields" style="display: none;">
+          <input type="number" name="experienceYears" placeholder="Years of Experience" min="0" />
+          <textarea name="availability" placeholder="Availability (e.g., Mon-Fri 9am-5pm)"></textarea>
+          <label for="bio">Bio</label>
+          <textarea id="bio" name="bio" placeholder="Tell us about yourself..."></textarea>
+          <label for="profileImage">Profile Image</label>
+          <input type="file" id="profileImage" name="profileImage" accept="image/*" />
+        </div>
         <input type="submit" id="submit" name="submit" value="Submit" class="btn" />
       </form>
     </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const ownerRadio = document.getElementById("owner");
+        const sitterRadio = document.getElementById("sitter");
+        const ownerFields = document.getElementById("ownerFields");
+        const sitterFields = document.getElementById("sitterFields");
+
+        function toggleFields() {
+          ownerFields.style.display = ownerRadio.checked ? "block" : "none";
+          sitterFields.style.display = sitterRadio.checked ? "block" : "none";
+        }
+
+        ownerRadio.addEventListener("change", toggleFields);
+        sitterRadio.addEventListener("change", toggleFields);
+      });
+    </script>
+
 </body>
 
 </html>

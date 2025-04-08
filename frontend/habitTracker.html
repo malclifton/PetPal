@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PetPal - Habit Tracker</title>
+    <link rel="stylesheet" href="./styles2.css" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <aside>
+            <div class="top">
+                <div class="logo">
+                    <img src="./img/logo.png" />
+                    <a href="index.html" class="logo-link">
+                        <div class="logo-container">
+                            <h1 class="logo-text">petpal</h1>
+                            <p class="tagline">F O R A L L Y O U R P E T N E E D S</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="close" id="close-btn">
+                    <span class="material-icons-sharp">close</span>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <a href="./petOwnerDashboard.html" class="active">
+                    <span class="material-icons-sharp">home</span>
+                    <h3>Dashboard</h3>
+                </a>
+                <a href="./petProfile.html">
+                    <span class="material-icons-sharp">pets</span>
+                    <h3>Pet Profile</h3>
+                </a>
+                <a href="./habitTracker.html">
+                    <span class="material-icons-sharp">edit_calendar</span>
+                    <h3>Habit Tracker</h3>
+                </a>
+                <a href="./hirePetSitter.html">
+                    <span class="material-icons-sharp">notifications_active</span>
+                    <h3>Contact Pet Sitters</h3>
+                    <a href="#"><span class="material-icons-sharp">help</span>
+                        <h3>Support Center</h3>
+                    </a>
+                    <a href="#"><span class="material-icons-sharp">logout</span>
+                        <h3>Logout</h3>
+                    </a>
+            </div>
+        </aside>
+
+        <main>
+            <h1>Habit Tracker</h1>
+            <br><br>
+            <div id="habit-container">
+                <p>Loading pet habits...</p>
+            </div>
+        </main>
+        <div class="right">
+            <div class="top">
+                <button id="menu-btn">
+                    <span class="material-icons-sharp">menu</span>
+                </button>
+                <div class="theme-toggler">
+                    <span class="material-icons-sharp active">light_mode</span>
+                    <span class="material-icons-sharp">dark_mode</span>
+                </div>
+                <div class="profile">
+                    <div class="profile-info">
+                        <p>Greetings, <b id="owner-name">Owner</b></p>
+                    </div>
+                    <div>
+                        <div class="profile-photo">
+                            <form id="profileImageForm" enctype="multipart/form-data">
+                                <input type="file" name="newProfileImage" id="newProfileImage" accept="image/*"
+                                    style="display: none;" />
+                                <label for="newProfileImage">
+                                    <img id="profileImage" src="./img/profile_pic.png" alt="Profile Image"
+                                        style="cursor: pointer;" />
+                                </label>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script src="./index2.js"></script>
+        </div>
+    </div>
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", () => {
+            fetch("./php/petProfile.php")
+                .then(res => res.json())
+                .then(pets => {
+                    const container = document.getElementById("habit-container");
+                    container.innerHTML = "";
+
+                    pets.forEach(pet => {
+                        const petDiv = document.createElement("div");
+                        petDiv.classList.add("pet-habit-block");
+                        petDiv.innerHTML = `
+                        <h2>${pet.name}</h2>
+                        <br>
+                        <div>
+                            <form data-pet-id="${pet.pet_id}" class="habit-form">
+                                <label>Habit Type:
+                                    <select name="habit_type">
+                                        <option value="feeding">Feeding</option>
+                                        <option value="potty">Potty</option>
+                                        <option value="exercise">Exercise</option>
+                                        <option value="medication">Medication</option>
+                                        <option value="sleep">Sleep</option>
+                                        <option value="custom">Custom</option>
+                                    </select>
+                                </label>
+                                <label>Description:
+                                    <input type="text" name="habit_description" placeholder="e.g. Walked 20 min">
+                                </label>
+                                <label>Time:
+                                    <input type="datetime-local" name="habit_time" required>
+                                </label>
+                                <button type="submit">Add Habit</button>
+                            </form>
+                            <br>
+                            <ul id="habits-${pet.pet_id}">Loading habits...</ul>
+                            <br><br>
+                        </div>
+                    `;
+                        container.appendChild(petDiv);
+                        loadHabits(pet.pet_id);
+                    });
+
+                    attachHabitFormListeners();
+                });
+
+            function attachHabitFormListeners() {
+                document.querySelectorAll(".habit-form").forEach(form => {
+                    form.addEventListener("submit", e => {
+                        e.preventDefault();
+                        const petId = form.dataset.petId;
+                        const formData = new FormData(form);
+                        formData.append("pet_id", petId);
+                        const editingHabitId = form.dataset.editingHabitId;
+
+                        const url = editingHabitId ? `./php/updateHabit.php?habit_id=${editingHabitId}` : "./php/addHabit.php";
+
+                        fetch(url, {
+                            method: "POST",
+                            body: formData
+                        })
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.success) {
+                                    form.reset();
+                                    delete form.dataset.editingHabitId;
+                                    loadHabits(petId);
+                                } else {
+                                    alert("Failed to save habit.");
+                                }
+                            });
+                    });
+                });
+            }
+
+            function loadHabits(petId) {
+                fetch(`./php/getHabit.php?pet_id=${petId}`)
+                    .then(res => res.json())
+                    .then(habits => {
+                        const list = document.getElementById(`habits-${petId}`);
+                        list.innerHTML = "";
+
+                        if (habits.length === 0) {
+                            list.innerHTML = "<li>No habits recorded.</li>";
+                        } else {
+                            const table = document.createElement("table");
+                            table.classList.add("habit-table");
+
+                            const thead = document.createElement("thead");
+                            thead.innerHTML = `
+                            <tr>
+                                <th>Type</th>
+                                <th>Description</th>
+                                <th>Time</th>
+                                <th>Actions</th>
+                            </tr>
+                        `;
+                            table.appendChild(thead);
+
+                            const tbody = document.createElement("tbody");
+                            habits.forEach(h => {
+                                const row = document.createElement("tr");
+                                row.innerHTML = `
+                                <td>${h.habit_type}</td>
+                                <td>${h.habit_description || 'No notes'}</td>
+                                <td>${new Date(h.habit_time).toLocaleString()}</td>
+                                <td>
+                                    <button class="edit-btn" data-habit-id="${h.habit_id}" data-pet-id="${petId}">Edit</button>
+                                    <button class="delete-btn" data-habit-id="${h.habit_id}" data-pet-id="${petId}">Delete</button>
+                                </td>
+                            `;
+                                tbody.appendChild(row);
+                            });
+                            table.appendChild(tbody);
+                            list.appendChild(table);
+
+                            tbody.querySelectorAll(".delete-btn").forEach(btn => {
+                                btn.addEventListener("click", () => {
+                                    const habitId = btn.dataset.habitId;
+                                    const petId = btn.dataset.petId;
+
+                                    if (confirm("Are you sure you want to delete this habit?")) {
+                                        fetch(`./php/deleteHabit.php?habit_id=${habitId}`, {
+                                            method: "POST",
+                                            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                                            body: `habit_id=${habitId}`
+                                        })
+                                            .then(res => res.json())
+                                            .then(data => {
+                                                if (data.success) {
+                                                    loadHabits(petId);
+                                                } else {
+                                                    alert("Failed to delete habit.");
+                                                }
+                                            });
+                                    }
+                                });
+                            });
+
+                            tbody.querySelectorAll(".edit-btn").forEach(btn => {
+                                btn.addEventListener("click", () => {
+                                    const habitId = btn.dataset.habitId;
+                                    const petId = btn.dataset.petId;
+
+                                    fetch(`./php/getHabit.php?habit_id=${habitId}`)
+                                        .then(res => res.json())
+                                        .then(habit => {
+                                            const form = document.querySelector(`form[data-pet-id="${petId}"]`);
+                                            form.elements["habit_type"].value = habit.habit_type;
+                                            form.elements["habit_description"].value = habit.habit_description;
+                                            form.elements["habit_time"].value = new Date(habit.habit_time).toISOString().slice(0, 16); // datetime-local format
+                                            form.dataset.editingHabitId = habitId;
+                                        });
+                                });
+                            });
+                        }
+                    });
+            }
+        });
+
+    </script>
+
+
+</body>
+
+</html>

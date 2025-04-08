@@ -8,6 +8,7 @@ $db_user = $config['db_user'];
 $db_pass = $config['db_pass'];
 $db_name = $config['db_name'];
 
+
 // Connect to database
 $conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
 if ($conn->connect_error) {
@@ -40,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Fetch user from the database
-    $stmt = $conn->prepare("SELECT user_id, name, email, password_hash FROM users WHERE email = ?");
+    $stmt = $conn->prepare("SELECT user_id, name, email, password_hash, role FROM users WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -52,11 +53,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (password_verify($password, $user["password_hash"])) {
             // Password is correct --> start a session
             $_SESSION["user_id"] = $user["user_id"];
+
             $_SESSION["user_name"] = $user["name"];
             $_SESSION["user_email"] = $user["email"];
+            $_SESSION["role"] = $user["role"];
 
             // Go to dashboard 
-            header("Location:petSitterDashboard.html");
+            if ($user["role"] === "owner") {
+                header("Location: petOwnerDashboard.html");
+            } else if ($user["role"] === "sitter") {
+                header("Location: petSitterDashboard.html");
+            }
             exit;
         } else {
             // Invalid password
@@ -71,4 +78,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 $conn->close();
-?>
