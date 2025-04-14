@@ -60,9 +60,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             // Go to dashboard 
             if ($user["role"] === "owner") {
-                header("Location: petOwnerDashboard.html");
+                header("Location: ../petOwnerDashboard.html");
             } else if ($user["role"] === "sitter") {
-                header("Location: petSitterDashboard.html");
+                header("Location: ../petSitterDashboard.html");
             }
             exit;
         } else {
