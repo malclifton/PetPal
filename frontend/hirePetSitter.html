@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PetPal - Habit Tracker</title>
+    <link rel="stylesheet" href="./styles2.css" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <aside>
+            <div class="top">
+                <div class="logo">
+                    <img src="./img/logo.png" />
+                    <a href="index.html" class="logo-link">
+                        <div class="logo-container">
+                            <h1 class="logo-text">petpal</h1>
+                            <p class="tagline">F O R A L L Y O U R P E T N E E D S</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="close" id="close-btn">
+                    <span class="material-icons-sharp">close</span>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <a href="./petOwnerDashboard.html" class="active">
+                    <span class="material-icons-sharp">home</span>
+                    <h3>Dashboard</h3>
+                </a>
+                <a href="./petProfile.html">
+                    <span class="material-icons-sharp">pets</span>
+                    <h3>Pet Profile</h3>
+                </a>
+                <a href="./habitTracker.html">
+                    <span class="material-icons-sharp">edit_calendar</span>
+                    <h3>Habit Tracker</h3>
+                </a>
+                <a href="./hirePetSitter.html"><span class="material-icons-sharp">notifications_active</span>
+                    <h3>Contact Pet Sitters</h3>
+                </a>
+                <a href="#"><span class="material-icons-sharp">help</span>
+                    <h3>Support Center</h3>
+                </a>
+                <a href="#"><span class="material-icons-sharp">logout</span>
+                    <h3>Logout</h3>
+                </a>
+            </div>
+        </aside>
+
+        <main>
+            <h1>Available Pet Sitters</h1>
+            <div id="sitter-list"></div>
+
+            <div id="chat-box" style="display:none;">
+                <h2 id="chat-header"></h2>
+                <div id="messages" class="chat-messages"></div>
+                <textarea id="message-input" placeholder="Type your message..."></textarea>
+                <button onclick="sendMessage()">Send</button>
+                <button onclick="closeChat()">Close Chat</button>
+            </div>
+        </main>
+        <div class="right">
+            <div class="top">
+                <button id="menu-btn">
+                    <span class="material-icons-sharp">menu</span>
+                </button>
+                <div class="theme-toggler">
+                    <span class="material-icons-sharp active">light_mode</span>
+                    <span class="material-icons-sharp">dark_mode</span>
+                </div>
+                <div class="profile">
+                    <div class="profile-info">
+                        <p>Greetings, <b id="owner-name">Owner</b></p>
+                    </div>
+                    <div>
+                        <div class="profile-photo">
+                            <form id="profileImageForm" enctype="multipart/form-data">
+                                <input type="file" name="newProfileImage" id="newProfileImage" accept="image/*"
+                                    style="display: none;" />
+                                <label for="newProfileImage">
+                                    <img id="profileImage" src="./img/profile_pic.png" alt="Profile Image"
+                                        style="cursor: pointer;" />
+                                </label>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <script src="./index2.js"></script>
+            </div>
+
+        </div>
+    </div>
+    <script>
+        const ownerId = 1;
+        let currentSitterId = null;
+
+        function loadSitters() {
+            fetch("./php/getSitters.php")
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    const sitterList = document.getElementById("sitter-list");
+                    sitterList.innerHTML = "";
+                    data.forEach(sitter => {
+                        const btn = document.createElement("button");
+                        const card = document.createElement("div");
+                        card.classList.add("sitter-card");
+
+                        card.innerHTML = `
+  <img src="${sitter.profile_image || './img/profile_pic.png'}" alt="${sitter.name}" class="sitter-img" />
+  <h3>${sitter.name}</h3>
+  <p><strong>Experience:</strong> ${sitter.experience_years} years</p>
+  <p><strong>Availability:</strong> ${sitter.availability}</p>
+  <p>${sitter.bio || ""}</p>
+  <button class="contact-btn">Message</button>
+`;
+
+                        card.querySelector("button").onclick = () => openChat(sitter);
+                        sitterList.appendChild(card);
+                        btn.onclick = () => openChat(sitter);
+                        sitterList.appendChild(btn);
+                    });
+                })
+                .catch(error => {
+                    console.error('There was an error fetching the sitters:', error);
+                });
+
+        }
+
+        function openChat(sitter) {
+            currentSitterId = sitter.sitter_id;
+            document.getElementById("chat-header").textContent = `Chat with ${sitter.name}`;
+            document.getElementById("chat-box").style.display = "block";
+            fetchMessages();
+        }
+        function closeChat() {
+            document.getElementById("chat-box").style.display = "none";
+            currentSitterId = null;
+        }
+
+        function fetchMessages() {
+            fetch(`./php/getMessages.php?owner_id=${ownerId}&sitter_id=${currentSitterId}`)
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    const messagesDiv = document.getElementById("messages");
+                    messagesDiv.innerHTML = "";
+                    data.forEach(msg => {
+                        const p = document.createElement("p");
+                        p.textContent = `${msg.sender_type}: ${msg.message}`;
+                        messagesDiv.appendChild(p);
+                    });
+                })
+                .catch(error => {
+                    console.error('There was an error fetching the messages:', error);
+                });
+
+        }
+
+        function sendMessage() {
+            const msg = document.getElementById("message-input").value;
+            if (!msg.trim()) return;
+            fetch("./php/sendMessage.php", {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    sender_id: ownerId,
+                    receiver_id: currentSitterId,
+                    sender_type: "owner",
+                    message: msg
+                })
+            }).then(() => {
+                document.getElementById("message-input").value = "";
+                fetchMessages();
+            });
+        }
+
+        loadSitters();
+    </script>
+</body>
+
+</html>
