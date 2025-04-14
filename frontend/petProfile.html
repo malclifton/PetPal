@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PetPal - For All Your Pet Needs</title>
+    <link rel="stylesheet" href="./styles2.css" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <aside>
+            <div class="top">
+                <div class="logo">
+                    <img src="./img/logo.png" />
+                    <a href="index.html" class="logo-link">
+                        <div class="logo-container">
+                            <h1 class="logo-text">petpal</h1>
+                            <p class="tagline">F O R A L L Y O U R P E T N E E D S</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="close" id="close-btn">
+                    <span class="material-icons-sharp">close</span>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <a href="./petOwnerDashboard.html" class="active">
+                    <span class="material-icons-sharp">home</span>
+                    <h3>Dashboard</h3>
+                </a>
+                <a href="./petProfile.html">
+                    <span class="material-icons-sharp">pets</span>
+                    <h3>Pet Profile</h3>
+                </a>
+                <a href="./habitTracker.html">
+                    <span class="material-icons-sharp">edit_calendar</span>
+                    <h3>Habit Tracker</h3>
+                </a>
+                <a href="./hirePetSitter.html">
+                    <span class="material-icons-sharp">notifications_active</span>
+                    <h3>Contact Pet Sitters</h3>
+                    <a href="#"><span class="material-icons-sharp">help</span>
+                        <h3>Support Center</h3>
+                    </a>
+                    <a href="#"><span class="material-icons-sharp">logout</span>
+                        <h3>Logout</h3>
+                    </a>
+            </div>
+        </aside>
+
+        <main>
+            <h1>Pet Profile</h1>
+            <div class="info" id="pet-info">
+                <p id="no-pet-message">No pet found</p>
+                <button id="add-pet-btn" class="btn">Add a New Pet</button>
+            </div>
+            <div id="loading-spinner"></div>
+
+            <div class="pet-form" id="pet-form" style="display: none;">
+                <form id="new-pet-form" enctype="multipart/form-data">
+                    <input type="hidden" id="edit-pet-id" name="pet_id" />
+                    <input type="hidden" id="current-image-url" name="current_image" />
+                    <label for="pet-name">Pet Name</label>
+                    <input type="text" id="pet-name" name="name" required />
+
+                    <label for="pet-species">Species</label>
+                    <select id="pet-species" name="species" required>
+                        <option value="dog">Dog</option>
+                        <option value="cat">Cat</option>
+                    </select>
+
+                    <label for="pet-breed">Breed</label>
+                    <input type="text" id="pet-breed" name="breed" required />
+
+                    <label for="pet-age">Age</label>
+                    <input type="number" id="pet-age" name="age" required />
+
+                    <label for="pet-weight">Weight (kg)</label>
+                    <input type="number" step="0.1" id="pet-weight" name="weight" required />
+
+                    <label for="pet-notes">Health Notes</label>
+                    <textarea id="pet-notes" name="health_notes"></textarea>
+
+                    <label for="favorite-toys">Favorite Toys</label>
+                    <input type="text" id="favorite-toys" name="favorite_toys" />
+
+                    <label for="favorite-foods">Favorite Foods</label>
+                    <input type="text" id="favorite-foods" name="favorite_foods" />
+
+                    <label for="personality">Personality</label>
+                    <textarea id="personality" name="personality"></textarea>
+
+                    <label for="special-needs">Special Needs</label>
+                    <textarea id="special-needs" name="special_needs"></textarea>
+
+                    <label for="custom-notes">Custom Notes</label>
+                    <textarea id="custom-notes" name="custom_notes"></textarea>
+
+                    <label for="pet-image">Upload Pet Image</label>
+                    <input type="file" id="pet-image" name="pet-image" accept="image/*" />
+
+                    <button type="submit" class="btn">Save Pet Profile</button>
+                    <button type="button" id="close-form-btn">Cancel</button>
+                </form>
+            </div>
+        </main>
+        <div class="right">
+            <div class="top">
+                <button id="menu-btn">
+                    <span class="material-icons-sharp">menu</span>
+                </button>
+                <div class="theme-toggler">
+                    <span class="material-icons-sharp active">light_mode</span>
+                    <span class="material-icons-sharp">dark_mode</span>
+                </div>
+                <div class="profile">
+                    <div class="profile-info">
+                        <p>Greetings, <b id="owner-name">Owner</b></p>
+                    </div>
+                    <div>
+                        <div class="profile-photo">
+                            <form id="profileImageForm" enctype="multipart/form-data">
+                                <input type="file" name="newProfileImage" id="newProfileImage" accept="image/*"
+                                    style="display: none;" />
+                                <label for="newProfileImage">
+                                    <img id="profileImage" src="./img/profile_pic.png" alt="Profile Image"
+                                        style="cursor: pointer;" />
+                                </label>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="./index2.js"></script>
+
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const petForm = document.getElementById("pet-form");
+            const formElement = document.getElementById("new-pet-form");
+            const addBtn = document.getElementById("add-pet-btn");
+            const closeFormBtn = document.getElementById("close-form-btn");
+
+            fetchPets();
+
+            addBtn.addEventListener("click", () => {
+                formElement.reset();
+                petForm.style.display = "block";
+                addBtn.style.display = "none";
+            });
+
+            closeFormBtn.addEventListener("click", () => {
+                petForm.style.display = "none";
+                addBtn.style.display = "block";
+                formElement.reset();
+            });
+
+            formElement.addEventListener("submit", function (event) {
+                event.preventDefault();
+                const formData = new FormData(formElement);
+                const petId = document.getElementById("edit-pet-id").value;
+                const endpoint = petId ? "./php/updatePet.php" : "./php/savePet.php";
+
+                if (petId && !confirm("Are you sure you want to update this pet's info?")) return;
+
+                fetch(endpoint, {
+                    method: "POST",
+                    body: formData
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert("Pet information saved successfully!");
+                            formElement.reset();
+                            petForm.style.display = "none";
+                            addBtn.style.display = "block";
+                            fetchPets();
+                        } else {
+                            alert("Error: " + data.message);
+                        }
+                    })
+                    .catch(err => {
+                        console.error("Error:", err);
+                        alert("An error occurred while saving the pet profile.");
+                    });
+            });
+        });
+
+        function fetchPets() {
+            const spinner = document.getElementById("loading-spinner");
+            spinner.style.display = "block";
+
+            fetch("./php/petProfile.php")
+                .then(response => response.json())
+                .then(pets => {
+                    const petInfoDiv = document.getElementById("pet-info");
+                    petInfoDiv.innerHTML = "";
+
+                    if (pets.length > 0) {
+                        pets.forEach(pet => {
+                            petInfoDiv.innerHTML += `
+            <div class="pet-card">
+              <h2>${pet.name}</h2>
+              <img src="${pet.image_url}" alt="Pet Image" width="200"><br>
+              <p><strong>Species:</strong> ${pet.species}</p>
+              <p><strong>Breed:</strong> ${pet.breed}</p>
+              <p><strong>Age:</strong> ${pet.age}</p>
+              <p><strong>Weight:</strong> ${pet.weight} kg</p>
+              <p><strong>Health Notes:</strong> ${pet.health_notes}</p>
+              <p><strong>Favorite Toys:</strong> ${pet.favorite_toys}</p>
+              <p><strong>Favorite Foods:</strong> ${pet.favorite_foods}</p>
+              <p><strong>Personality:</strong> ${pet.personality}</p>
+              <p><strong>Special Needs:</strong> ${pet.special_needs}</p>
+              <p><strong>Custom Notes:</strong> ${pet.custom_notes}</p>
+              <button class="btn edit-pet-btn"
+                data-id="${pet.pet_id}"
+                data-name="${pet.name}"
+                data-species="${pet.species}"
+                data-breed="${pet.breed}"
+                data-age="${pet.age}"
+                data-weight="${pet.weight}"
+                data-health_notes="${pet.health_notes}"
+                data-favorite_toys="${pet.favorite_toys}"
+                data-favorite_foods="${pet.favorite_foods}"
+                data-personality="${pet.personality}"
+                data-special_needs="${pet.special_needs}"
+                data-custom_notes="${pet.custom_notes}"
+                data-image_url="${pet.image_url}"
+              >Edit</button>
+              <button class="btn delete-pet-btn" data-id="${pet.pet_id}">Delete</button>
+            </div>
+          `;
+                        });
+                    } else {
+                        petInfoDiv.innerHTML = `<p id="no-pet-message">No pet found</p>`;
+                    }
+
+                    const addNewBtn = document.createElement("button");
+                    addNewBtn.id = "add-pet-btn";
+                    addNewBtn.className = "btn";
+                    addNewBtn.textContent = "Add Another Pet";
+                    addNewBtn.addEventListener("click", () => {
+                        document.getElementById("new-pet-form").reset();
+                        document.getElementById("edit-pet-id").value = "";
+                        document.getElementById("current-image-url").value = "";
+                        document.getElementById("pet-form").style.display = "block";
+                        addNewBtn.style.display = "none";
+                    });
+
+                    petInfoDiv.appendChild(addNewBtn);
+                    attachButtonListeners();
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert("Failed to load pets.");
+                })
+                .finally(() => {
+                    spinner.style.display = "none";
+                });
+        }
+
+
+        function attachButtonListeners() {
+            document.querySelectorAll(".edit-pet-btn").forEach(button => {
+                button.addEventListener("click", () => {
+                    const form = document.getElementById("new-pet-form");
+                    const fields = ["id", "name", "species", "breed", "age", "weight", "health_notes", "favorite_toys", "favorite_foods", "personality", "special_needs", "custom_notes", "image_url"];
+                    fields.forEach(field => {
+                        const formField = form.querySelector(`[name="${field === 'id' ? 'pet_id' : field}"]`);
+                        if (formField) formField.value = button.dataset[field];
+                    });
+
+                    document.getElementById("current-image-url").value = button.dataset.image_url;
+
+                    document.getElementById("pet-form").style.display = "block";
+                    document.getElementById("add-pet-btn").style.display = "none";
+                });
+            });
+
+            document.querySelectorAll(".delete-pet-btn").forEach(button => {
+                button.addEventListener("click", () => {
+                    const petId = button.dataset.id;
+                    if (confirm("Are you sure you want to delete this pet?")) {
+                        fetch("./php/deletePet.php", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/x-www-form-urlencoded",
+                            },
+                            body: `id=${encodeURIComponent(petId)}`
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    alert("Pet deleted successfully.");
+                                    fetchPets();
+                                } else {
+                                    alert("Failed to delete pet: " + data.message);
+                                }
+                            })
+                            .catch(err => {
+                                console.error("Error deleting pet:", err);
+                                alert("Failed to delete pet.");
+                            });
+                    }
+                });
+            });
+
+        }
+    </script>
+</body>
+
+</html>

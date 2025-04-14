@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE-edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles2.css">
+    <title>PetPal - For All Your Pet Needs</title>
+    <!--Material Icons-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <aside>
+            <div class="top">
+                <div class="logo">
+                    <img src="./img/logo.png">
+                    <a href="index.html" class="logo-link">
+                        <div class="logo-container">
+                            <h1 class="logo-text">petpal</h1>
+                            <p class="tagline">F O R A L L Y O U R P E T N E E D S</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="close" id="close-btn">
+                    <span class="material-icons-sharp">close</span>
+                </div>
+            </div>
+            <div class="sidebar">
+                <a href="#" class="active">
+                    <span class="material-icons-sharp">home</span>
+                    <h3>Dashboard</h3>
+                </a>
+                <a href="./petProfile.html">
+                    <span class="material-icons-sharp">pets</span>
+                    <h3>Pet Profile</h3>
+                </a>
+                <a href="./habitTracker.html">
+                    <span class="material-icons-sharp">edit_calendar</span>
+                    <h3>Habit Tracker</h3>
+                </a>
+                <a href="./hirePetSitter.html">
+                    <span class="material-icons-sharp">notifications_active</span>
+                    <h3>Contact Pet Sitters</h3>
+                </a>
+                <a href="#">
+                    <span class="material-icons-sharp">help</span>
+                    <h3>Support Center</h3>
+                </a>
+                <a href="#">
+                    <span class="material-icons-sharp">logout</span>
+                    <h3>Logout</h3>
+                </a>
+            </div>
+        </aside>
+        <!------------------End of Aside--------------------->
+        <main>
+            <h1>Dashboard</h1>
+
+            <div class="date">
+                <input type="date">
+            </div>
+
+            <div class="info">
+                <div class="habits">
+                    <span class="material-icons-sharp">pets</span>
+                    <div class="middle">
+                        <div id="todays-habits">
+                            <h3>Today's Habits</h3>
+                            <script>
+                                /*Habit Tracking for Pet Owner Dahboard */
+                                function formatTime(timeStr) {
+                                    const [hour, minute] = timeStr.split(":");
+                                    const date = new Date();
+                                    date.setHours(hour, minute);
+                                    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+                                }
+
+                                function fetchTodaysHabits() {
+                                    const today = new Date().toISOString().split("T")[0];
+
+                                    fetch(`php/fetchHabits.php?date=${today}`)
+                                        .then((response) => {
+                                            if (!response.ok) throw new Error("Network response was not ok");
+                                            return response.json();
+                                        })
+                                        .then((data) => {
+                                            const list = document.getElementById("habit-list");
+                                            list.innerHTML = "";
+
+                                            if (data.length === 0) {
+                                                list.innerHTML = "<li>No habits today!</li>";
+                                                return;
+                                            }
+
+                                            data.forEach((habit) => {
+                                                const li = document.createElement("li");
+                                                const formattedTime = formatTime(habit.time);
+                                                li.textContent = `${habit.pet_name}: ${habit.habit_type} at ${formattedTime}`;
+                                                list.appendChild(li);
+                                            });
+                                        })
+                                        .catch((error) => {
+                                            console.error("Error fetching habits:", error);
+                                            document.getElementById("habit-list").innerHTML =
+                                                "<li>Error loading habits</li>";
+                                        });
+                                }
+
+                                fetchTodaysHabits();
+                                setInterval(fetchTodaysHabits, 3000);
+
+                            </script>
+                            <ul id="habit-list"></ul>
+                        </div>
+                    </div>
+                    <a href="./habitTracker.html">
+                        <small class="text-muted">View All Habits</small>
+                    </a>
+                </div>
+                <!--------End of Habits---------->
+                <div class="tasks">
+                    <span class="material-icons-sharp">edit_calendar</span>
+                    <div class="middle">
+                        <h3>Tasks</h3>
+                        <h1>PlaceHolder for database</h1>
+                    </div>
+                    <small class="text-muted">Last 24 hours</small>
+                </div>
+                <!----End of Tasks------------->
+                <div class="reminders">
+                    <span class="material-icons-sharp">notifications_active</span>
+                    <div class="middle">
+                        <h3>Reminders</h3>
+                        <h1>PlaceHolder for database</h1>
+                    </div>
+                    <small class="text-muted">Last 24 hours</small>
+                </div>
+                <!-----End of Reminders------>
+            </div>
+            <!--------End of info-------->
+            <div class="recent-pet">
+                <h2>Pets</h2>
+                <script>
+                    // JavaScript code for fetching and updating the table
+                    function fetchData() {
+                        fetch('fetch_data.php')
+                            .then(response => response.json())
+                            .then(data => {
+                                const table = document.getElementById('petTable');
+                                table.innerHTML = ''; // Clear existing rows
+
+                                data.forEach(row => {
+                                    const tr = document.createElement('tr');
+                                    Object.values(row).forEach(value => {
+                                        const td = document.createElement('td');
+                                        td.textContent = value;
+                                        tr.appendChild(td);
+                                    });
+                                    table.appendChild(tr);
+                                });
+                            });
+                    }
+
+                    // Fetch data periodically
+                    setInterval(fetchData, 3000);
+                </script>
+                <table id="petTable">
+                    <thead>
+                        <tr>
+                            <th>Pet Name</th>
+                            <th>Pet Owner</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Rows will be dynamically added here -->
+                    </tbody>
+                </table>
+                <a href="#">Show All</a>
+            </div>
+        </main>
+        <!-------End of Main------>
+
+        <div class="right">
+            <div class="top">
+                <button id="menu-btn">
+                    <span class="material-icons-sharp">menu</span>
+                </button>
+                <div class="theme-toggler">
+                    <span class="material-icons-sharp active">light_mode</span>
+                    <span class="material-icons-sharp">dark_mode</span>
+                </div>
+                <div class="profile">
+                    <div class="profile-info">
+                        <p>Greetings, <b id="owner-name">Owner</b></p>
+                    </div>
+                    <div>
+                        <div class="profile-photo">
+                            <script>
+                                /*Change Profile*/
+                                document.addEventListener("DOMContentLoaded", () => {
+                                    fetch("/php/getOwnerProfile.php")
+                                        .then((response) => response.json())
+                                        .then((data) => {
+                                            if (data.name) {
+                                                document.getElementById("owner-name").innerHTML = data.name;
+                                            }
+                                            if (data.profile_image) {
+                                                document.getElementById("profileImage").src =
+                                                    data.profile_image + "?t=" + new Date().getTime();
+                                            }
+                                        });
+
+                                    document
+                                        .getElementById("newProfileImage")
+                                        .addEventListener("change", function () {
+                                            const form = document.getElementById("profileImageForm");
+                                            const formData = new FormData(form);
+
+                                            fetch("/php/updateProfileImage.php", {
+                                                method: "POST",
+                                                body: formData,
+                                            })
+                                                .then((res) => res.json())
+                                                .then((data) => {
+                                                    if (data.success) {
+                                                        document.getElementById("profileImage").src =
+                                                            data.new_image + "?" + new Date().getTime();
+                                                    } else {
+                                                        alert("Failed to update image: " + (data.error || "Unknown error"));
+                                                    }
+                                                });
+                                        });
+                                });
+                            </script>
+                            <form id="profileImageForm" enctype="multipart/form-data">
+                                <input type="file" name="newProfileImage" id="newProfileImage" accept="image/*"
+                                    style="display: none;" />
+                                <label for="newProfileImage">
+                                    <img id="profileImage" src="./img/profile_pic.png" alt="Profile Image"
+                                        style="cursor: pointer;" />
+                                </label>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!---End of top----->
+                <div class="recent-notifications">
+                    <h2>Recent Notifications</h2>
+                    <div class="notifications">
+                        <div class="notification">
+                            <div class="profile">
+                                <img src="./img/profile_pic.png">
+                            </div>
+                            <div class="message">
+                                <p><b>Owner 4</b>wants her dog walked at 4 pm.</p>
+                                <small class="text-muted">2 minutes ago</small>
+                            </div>
+                        </div>
+                        <div class="notification">
+                            <div class="profile">
+                                <img src="./img/profile_pic.png">
+                            </div>
+                            <div class="message">
+                                <p><b>Owner 1</b>wants their cat fed at 6 am.</p>
+                                <small class="text-muted">20 minutes ago</small>
+                            </div>
+                        </div>
+                        <div class="notification">
+                            <div class="profile">
+                                <img src="./img/profile_pic.png">
+                            </div>
+                            <div class="message">
+                                <p><b>Owner 3</b>wants his dog groomed at 4 pm Tuesday.</p>
+                                <small class="text-muted">10 hours ago</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-----End of Recent Notifications------->
+            </div>
+        </div>
+    </div>
+    <script src="./index2.js">
+
+    </script>
+</body>
+
+</html>
