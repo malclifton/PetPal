@@ -127,7 +127,7 @@ if ($stmt->execute()) {
     if ($roleStmt->execute()) {
         $roleStmt->close();
         $conn->close();
-        header("Location: ./signIn.html");
+        header("Location: ../signIn.html");
         exit;
     } else {
         die("Error adding to role table: " . $roleStmt->error);
