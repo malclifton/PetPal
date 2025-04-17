@@ -1,84 +1,125 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // TODO: have the userId from the sign in be set here, I put userId=3 because that's the only userId i have in my own DB
-  const userId = 3;
-  /*
-        This is the script for the notifications. Right now, you have to manually put in the userId for the notifcations you want to see
-        In the future, this'll be handled automatically, but for now, it successfully displays notifications that the user has been sent
+  console.log("🐾 script.js loaded!");
 
-    */
-  function fetchNotifications() {
-    fetch() 
-      .then((response) => response.json())
-      .then((notifications) => {
-        const container = document.querySelector(
-          ".recent-notifications .notifications"
-        );
-        container.innerHTML = "";
+  // Step 1: Get the logged-in user
+  fetch("php/get_session_user.php")
+    .then((res) => {
+      if (!res.ok) throw new Error("Not logged in");
+      return res.json();
+    })
+    .then((user) => {
+      const userId = user.user_id;
+      console.log("Logged-in user ID:", userId);
 
-        notifications.forEach((notification) => {
-          const notificationDiv = document.createElement("div");
-          notificationDiv.className = `notification ${notification.status}`;
-          notificationDiv.dataset.id = notification.notificationId;
-
-          notificationDiv.innerHTML = `
-                        <div class="profile">
-                            <img src="./img/profile_pic.png">
-                        </div>
-                        <div class="message">
-                            <p><b>${notification.message}</b></p>
-                            <small class="text-muted">${new Date(
-                              notification.sendTime
-                            ).toLocaleString()}</small>
-                            ${
-                              notification.status === "unread"
-                                ? `<button onclick="markAsRead(${notification.notificationId})">Mark Read</button>`
-                                : ""
-                            }
-                        </div>
-                    `;
-
-          container.appendChild(notificationDiv);
-        });
-      })
-      .catch((error) => console.error("Error:", error));
-  }
-
-  // Initial fetch
-  fetchNotifications();
-
-  // Refresh every 30 seconds
-  setInterval(fetchNotifications, 30000);
+      // Step 2: Fetch notifications for that user
+      fetchNotifications(userId);
+    })
+    .catch((err) => {
+      console.error("Error fetching session user:", err);
+      const container = document.querySelector(".notifications");
+      if (container) {
+        container.innerHTML = "<p>Please log in to view notifications.</p>";
+      }
+    });
 });
 
-// Mark as read function
-function markAsRead(notificationId) {
-  fetch(
-    `https://codd.cs.gsu.edu/~mclifton6/petpal/backend/api/notifications/${notificationId}/read`,
-    {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  )
-    .then((response) => {
-      if (!response.ok) throw new Error("Failed to mark as read");
-      return response.json();
+function fetchNotifications(userId) {
+  console.log("📩 Fetching notifications for user:", userId);
+
+  fetch(`php/getNotifications.php?userId=${userId}`)
+    .then((res) => res.json())
+    .then((notifications) => {
+      console.log("✅ Received notifications:", notifications);
+
+      const container = document.querySelector(".notifications");
+      console.log("📦 Notification container:", container);
+
+      if (!container) {
+        console.warn("⚠️ .notifications container not found!");
+        return;
+      }
+
+      container.innerHTML = "";
+
+      if (!notifications.length) {
+        container.innerHTML = "<p>No recent notifications.</p>";
+        return;
+      }
+
+      notifications.forEach((notif) => {
+        const div = document.createElement("div");
+        div.className = `notification ${notif.status}`;
+        div.dataset.id = notif.notificationId;
+
+        const date = new Date(notif.sendTime);
+        const timeAgo = timeSince(date);
+
+        div.innerHTML = `
+          <div class="profile">
+            <img src="./img/profile_pic.png">
+          </div>
+          <div class="message">
+            <p><b>${notif.message}</b></p>
+            <small class="text-muted">${timeAgo}</small>
+            ${
+              notif.status === "unread"
+                ? `<button onclick="markAsRead(${notif.notificationId})">Mark Read</button>`
+                : ""
+            }
+          </div>
+        `;
+
+        container.appendChild(div);
+      });
     })
-    .then((updatedNotification) => {
+    .catch((err) => {
+      console.error(" Notification fetch error:", err);
+    });
+}
+
+function markAsRead(notificationId) {
+  fetch(`php/markNotificationsRead.php?id=${notificationId}`, {
+    method: "POST",
+  })
+    .then((res) => {
+      if (!res.ok) throw new Error("Failed to mark as read");
+      return res.json();
+    })
+    .then(() => {
       const notificationDiv = document.querySelector(
         `.notification[data-id="${notificationId}"]`
       );
       if (notificationDiv) {
         notificationDiv.classList.remove("unread");
         notificationDiv.classList.add("read");
-        // Remove the mark as read button
         const button = notificationDiv.querySelector("button");
         if (button) button.remove();
       }
     })
-    .catch((error) => {
-      console.error("Error:", error);
-      alert("Failed to update notification status");
+    .catch((err) => {
+      console.error("⚠️ Error marking as read:", err);
+      alert("Failed to mark notification as read.");
     });
+}
+
+// Utility: Converts timestamp to "X minutes/hours ago"
+function timeSince(date) {
+  const seconds = Math.floor((new Date() - date) / 1000);
+  const units = [
+    { label: "year", seconds: 31536000 },
+    { label: "month", seconds: 2592000 },
+    { label: "day", seconds: 86400 },
+    { label: "hour", seconds: 3600 },
+    { label: "minute", seconds: 60 },
+    { label: "second", seconds: 1 },
+  ];
+
+  for (let unit of units) {
+    const interval = Math.floor(seconds / unit.seconds);
+    if (interval >= 1) {
+      return `${interval} ${unit.label}${interval !== 1 ? "s" : ""} ago`;
+    }
+  }
+
+  return "just now";
 }

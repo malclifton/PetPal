@@ -36,8 +36,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     // Handle image upload
     if (isset($_FILES["pet-image"]) && $_FILES["pet-image"]["error"] === UPLOAD_ERR_OK) {
-        $upload_dir = __DIR__ . "../uploads/";
-        $relative_path = "uploads/";
+        $upload_dir = __DIR__ . "/uploads/";
+        $relative_path = "php/uploads//";
 
         if (!is_dir($upload_dir)) {
             mkdir($upload_dir, 0755, true);

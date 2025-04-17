@@ -21,7 +21,17 @@ if (!$userId) {
     exit;
 }
 
-$stmt = $conn->prepare("SELECT * FROM pet_notifications WHERE user_id = ?");
+$stmt = $conn->prepare("
+    SELECT 
+        notification_id AS notificationId, 
+        pet_id AS petId, 
+        message, 
+        send_time AS sendTime, 
+        status 
+    FROM pet_notifications 
+    WHERE user_id = ?
+    ORDER BY send_time DESC
+");
 $stmt->bind_param("i", $userId);
 $stmt->execute();
 $result = $stmt->get_result();
