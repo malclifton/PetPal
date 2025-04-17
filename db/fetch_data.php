@@ -1,8 +1,10 @@
 <?php
-$servername = "Local instance MySQL80"; // Replace with your server's name or IP address
-$username = "root";       // Your database username
-$password = "carti";           // Your database password
-$dbname = "petSitterApp"; // The name of your database
+$config = require __DIR__ . '/config.php';
+
+$db_host = $config['db_host'];
+$db_user = $config['db_user'];
+$db_pass = $config['db_pass'];
+$db_name = $config['db_name'];
 
 // Create a connection to the database
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -13,7 +15,7 @@ if ($conn->connect_error) {
 }
 
 // Fetch data from table
-$sql = "SELECT name.pets, owner_id FROM pets"; 
+$sql = "SELECT name, owner_id FROM pets"; 
 $result = $conn->query($sql);
 
 // Create an array to store the data
