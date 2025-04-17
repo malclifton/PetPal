@@ -1,0 +1,144 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    line-height: 1.2;
+}
+
+body {
+    font-family: "Inter", -apple-system, Roboto, Helvetica, sans-serif;
+    overflow-x: hidden;
+    background-color: #f5f5f5;
+}
+
+/* Links */
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Header Styles */
+.main-header {
+    background-color: #219ebc;
+    display: flex;
+    padding: 15px 50px;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.logo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+}
+
+.logo-text {
+    color: #ffffff;
+    font-size: 30px;
+    font-family: "Fredoka One", -apple-system, Roboto, Helvetica, sans-serif;
+    font-weight: 400;
+}
+
+.tagline {
+    color: #fb8500;
+    font-size: 8px;
+    font-weight: 700;
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.profile-photo img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.title h1 {
+    color: #ffffff;
+    font-size: 24px;
+    text-align: center;
+}
+
+/* Dropdown Section */
+.dropdown-section {
+    margin: 20px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.dropdown-button {
+    background-color: #fb8500;
+    color: #ffffff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.dropdown-button:hover {
+    background-color: #ff9e4f;
+}
+
+.dropdown-content {
+    display: none;
+    padding: 10px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.faq-item {
+    margin: 5px 0;
+    color: #333;
+    font-size: 14px;
+}
+
+/* Main Content */
+main {
+    display: absolute;
+    flex-direction: column;
+    gap: 25px;
+    padding: 20px;
+    align-items: center;
+    margin-top: 50px;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .main-header {
+        padding: 12px 20px;
+    }
+
+    .logo-text {
+        font-size: 26px;
+    }
+
+    .title h1 {
+        font-size: 20px;
+    }
+
+    .dropdown-button {
+        font-size: 14px;
+    }
+
+    .dropdown-content .faq-item {
+        font-size: 12px;
+    }
+
+    main div {
+        width: 90%;
+        text-align: center;
+    }
+}

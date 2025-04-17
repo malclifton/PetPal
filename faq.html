@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang = 'en';>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="supportFAQ.css">
+        <title>PetPal - For All Your Pet Needs</title>
+        <!--Material Icons-->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"/>
+    </head>
+
+    <body>
+        <header class = "main-header">
+            <a href = "/sitterDash/petSitterDashboard.html" class = "logo-link">
+                <div class="logo-container">
+                    <h1 class="logo-text">petpal</h1>
+                    <p class="tagline">F O R A L L Y O U R P E T N E E D S</p>
+                </div>
+            </a>
+            <div class="profile">
+                <div class="profile-info">
+                    <p>Greetings, <b>Sitter</b></p>
+                </div>
+                <div class="profile-photo">
+                    <img src = "../../images/profile_pic.png">
+                </div>
+            </div>
+            <div class="title">
+                <h1>FAQs</h1>
+            </div>
+        </header>
+
+        <main>
+            <div class="dropdown-section">
+                <button class="dropdown-button" onclick="toggleDropdown('petSitter')">Pet Sitter</button>
+                <div id="petSitter" class="dropdown-content">
+                    <div class="faq-item">
+                        <b>How do I create and set up my profile?</b> 
+                        <p>Once you have specified yourself as a Pet Sitter in the profile creation screen, 
+                            simply click your profile icon in the top right corner on your dashboard to edit your bio, 
+                            username, password or any other info you'd like to change.</p>
+                    </div>
+                    <div class="faq-item">
+                        <b>What fees can I charge for my services?</b>
+                        <p>- <u>Daily Sitting Fee:</u> A standard rate per day for taking care of the pet.</p>
+                        <p>- <u>Hourly Rate:</u> For shorter durations of pet care, pet sitters might charge an hourly fee.</p>
+                        <p>- <u>Overnight Stay Fee:</u> An additional fee if the sitter stays overnight with the pet.</p>
+                        <p>- <u>Transport Fee:</u> For services requiring pick-up or drop-off of the pet to/from a location.</p>
+                        <p>- <u>Special Care Fee:</u> An added cost for pets needing extra care 
+                            (e.g., senior pets, pets with medical needs, or pets requiring medication).</p>
+                        <p>- <u>Grooming Fee:</u> If pet sitters provide grooming services, such as bathing or nail trimming.</p>
+                        <p>- <u>Holiday Fee:</u> Higher rates for services provided during holidays or busy seasons.</p>
+                        <p>- <u>Cancellation Fee:</u> Charged if a booking is canceled too close to the service date.</p>
+                        <p>- <u>Emergency Fee:</u> For last-minute or urgent bookings.</p>
+                        <p>- <u>Additional Pet Fee:</u> A fee for taking care of more than one pet at the same time.</p>
+            
+                    </div>
+                    <div class="faq-item">
+                        <b>How can I improve my profile visibility?</b>
+                        <p>- <u>Complete Your Profile:</u> Ensure every section is filled out, including a compelling bio, qualifications, 
+                        experience, and a profile picture. Profiles with complete information appear more professional and trustworthy.</p>
+                        <p>- <u>Get Reviews and Ratings:</u> Encourage pet owners to leave positive reviews and ratings after each service. 
+                            Strong feedback can make your profile stand out to potential clients.</p>
+                        <p>- <u>Set Competitive Rates:</u> Offer fair and attractive rates based on local market standards to increase 
+                            interest in your services.</p>
+                        <p>- <u>Upload Photos or Videos:</u> Share pictures or short clips of pets you've cared for to showcase your expertise 
+                            and create a personal connection with clients.</p>
+                        <p>- <u>Keep Availability Updated:</u> Make sure your availability calendar is accurate and up-to-date, so clients can 
+                            easily book your services.</p>
+                        <p>- <u>Offer Specialized Services:</u> Highlight unique skills, such as experience with senior pets, exotic animals, 
+                            or administering medications, to reach niche audiences.</p>
+                        <p>- <u>Respond Quickly:</u> Prompt replies to inquiries show professionalism and improve your chances of securing bookings.</p>
+                        <p>- <u>Be Active:</u> Regularly update your profile, share new experiences, and check messages to stay visible and engaged.</p>
+                    </div>
+                    <div class="faq-item">
+                        <b>What should I do if a pet gets sick or injured while in my care?</b>
+                        <p><u>Contact the owner immediately</u> to inform them of the situation.</p>
+                        <p><u>Seek professional help</u> by calling or visiting a local veterinarian.</p>
+                        <p><u>Follow the owner's instructions</u> regarding care or treatment.</p>
+                    </div>
+                </div>
+
+                <button class="dropdown-button" onclick="toggleDropdown('petOwner')">Pet Owner</button>
+                <div id="petOwner" class="dropdown-content">
+                    <div class="faq-item">
+                        <b>How do I find and book a pet sitter?</b>
+                        <p><u>Step 1: Search for Pet Sitters</u> Use the app's search feature to explore available sitters in your 
+                            area. You can view their profiles, check their experience, availability, and read reviews from other 
+                            pet owners.</p>
+                        <p><u>Step 2: Pick the Perfect Match</u> Choose the sitter who suits your pet's needs. Whether you have a 
+                            playful pup or a shy cat, you can find someone who fits their personality.</p>
+                        <p><u>Step 3: Book Your Sitter</u> Select your preferred dates and confirm your booking directly in the app. 
+                            Make sure to include any special instructions about feeding, medication, or care preferences.</p>
+                        <p><u>Step 4: Stay Connected</u> Once booked, you'll receive updates from your sitter throughout the service, 
+                            such as photos and messages to keep you in the loop about your pet's care.</p>
+                    </div>
+                    <div class="faq-item">
+                        <b>Can I meet the sitter before booking?</b>
+                        <p>Yes, we understand that meeting your pet's caregiver beforehand can provide peace of mind! You can 
+                            request a meet-and-greet through the app once you've chosen a sitter. This allows you to discuss 
+                            your pet's needs and ensure it's a great match. Simply coordinate a time and location with your 
+                            sitter through our messaging feature.</p>
+                    </div>
+                    <div class="faq-item">
+                        <b>What should I do if I'm not satisfied with the service?</b>
+                        <p>Submit a <u>help ticket</u> to describe the issue. Our team will review it promptly and work 
+                            toward a resolution.
+                        </p>
+                        <p>You can also use the <u>live chat</u> feature to connect with a support agent for real-time assistance.
+                        </p>
+                        <p>If available, use the <u>report feature</u> on the sitter's profile to provide feedback directly.
+                        </p>
+                    </div>
+                </div>
+
+                <button class="dropdown-button" onclick="toggleDropdown('general')">General FAQs</button>
+                <div id="general" class="dropdown-content">
+                    <div class="faq-item">
+                        <b>What is PetPal, and how does it work?</b>
+                        <p>PetPal is an innovative platform designed to connect pet owners with trusted pet sitters and caregivers in their area. Whether you need someone to look after your furry friend during a busy day or while you're traveling, PetPal makes it easy to find experienced professionals who provide personalized pet care.
+                            With features like sitter profiles, availability calendars, reviews, and messaging, PetPal ensures peace of mind for pet owners by simplifying the process of booking reliable pet care. Additionally, the app includes options for meet-and-greets, updates during the service, and flexible payment methods to suit your needs.
+                            If you'd like, I can add more details or adjust the wording to match the tone of your FAQ. Let me know!
+                            </p>
+                    </div>
+                    <div class="faq-item">
+                        <b>How does PetPal verify sitters and owners?</b>
+                        <p>You will be asked upon profile creation whether you'll be using the app as a sitter or an owner. 
+                            From then on, your experience will be tailored to your profile type.</p>
+                    </div>
+                    <div class="faq-item">
+                        <b>What kind of pets can be cared for using PetPal?</b>
+                        <p>Cats and Dogs are accepted as of now.</p>
+                    </div>
+                    <div class="faq-item">
+                        <b>How can I contact customer support?</b>
+                        <p>Navigate to the Support Center and submit a help ticket or request a live chat. 
+                            Help Tickets take up to 24 hours for review.</p>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                function toggleDropdown(id) {
+                    const dropdownContent = document.getElementById(id);
+                    dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
+                }
+            </script>
+        </main>
+    </body>
+</html>
