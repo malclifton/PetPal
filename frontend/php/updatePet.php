@@ -43,15 +43,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Handle image upload
     if (isset($_FILES["pet-image"]) && $_FILES["pet-image"]["error"] === UPLOAD_ERR_OK) {
         $upload_dir = __DIR__ . "/../uploads/";
-        $relative_path = "uploads/";
-
         if (!is_dir($upload_dir)) {
-            mkdir($upload_dir, 0755, true);
+            mkdir($upload_dir, 0777, true);
         }
 
         $file_tmp = $_FILES["pet-image"]["tmp_name"];
-        $file_name = time() . "_" . basename($_FILES["pet-image"]["name"]);
-        $target_path = $upload_dir . $file_name;
+        $file_name = time() . "_" . uniqid() . "_" . basename($_FILES["pet-image"]["name"]);
+        $target_path = $upload_dir . "/" . $file_name;
 
         $check = getimagesize($file_tmp);
         if ($check === false) {
@@ -60,11 +58,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
 
         if (move_uploaded_file($file_tmp, $target_path)) {
-            $image_url = $relative_path . $file_name;
+            $image_url = "uploads/" . $file_name;
         } else {
             echo json_encode(["success" => false, "message" => "Failed to upload image"]);
             exit;
         }
+    } else {
+        // Keep current image if no new file is uploaded
+        $image_url = $_POST["current_image"] ?? null;
     }
 
     // Update pets table

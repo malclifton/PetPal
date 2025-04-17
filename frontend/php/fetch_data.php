@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 $config = require __DIR__ . '/config.php';
 
 $db_host = $config['db_host'];
@@ -14,22 +16,37 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch data from table
-$sql = "SELECT name, owner_id FROM pets"; 
-$result = $conn->query($sql);
+// Get logged-in user's ID
+$owner_id = $_SESSION['user_id'] ?? null;
+
+if (!$owner_id) {
+    echo json_encode(["error" => "User not logged in"]);
+    exit;
+}
+
+// Prepare SQL statement to get only the current owner's pets
+$sql = "SELECT name, owner_id FROM pets WHERE owner_id = ?";
+$stmt = $conn->prepare($sql);
+
+if (!$stmt) {
+    echo json_encode(["error" => "Query error: " . $conn->error]);
+    exit;
+}
+
+$stmt->bind_param("i", $owner_id);
+$stmt->execute();
+$result = $stmt->get_result();
 
 // Create an array to store the data
 $data = array();
 
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $data[] = $row; // Add each row of data to the array
-    }
+while ($row = $result->fetch_assoc()) {
+    $data[] = $row;
 }
 
 // Return the data as JSON
 echo json_encode($data);
 
-// Close the database connection
+// Close connections
+$stmt->close();
 $conn->close();
-?>
