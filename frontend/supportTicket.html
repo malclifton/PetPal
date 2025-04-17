@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang ='en'>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/supportCenter/supportTicket/supportTicket.css">
+        <title>PetPal - For All Your Pet Needs</title>
+        <!--Material Icons-->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"/>
+    </head>
+
+    <header class = "main-header">
+        <a href = "/frontend/petSitterDashboard.html" class = "logo-link">
+            <div class="logo-container">
+                <h1 class="logo-text">petpal</h1>
+                <p class="tagline">F O R A L L Y O U R P E T N E E D S</p>
+            </div>
+        </a>
+        <div class="profile">
+            <div class="profile-info">
+                <p>Greetings, <b>Sitter</b></p>
+            </div>
+            <div class="profile-photo">
+                <img src = "../../images/profile_pic.png">
+            </div>
+        </div>
+        <div class="title">
+            <h1>Support Tickets</h1>
+        </div>
+    </header>
+    <body>
+        <div class="support-ticket">
+            <form action="#" method="POST">
+                <label for="supportTitle">Title:</label>
+                <input type="text" id="supportTitle" name="Title" placeholder="Support Issue" required />
+            
+                <label for="supportDescription">Description:</label>
+                <textarea id="supportDescription" name="Description" placeholder="Description for Issue" maxlength="500" required></textarea>
+            
+                <input type="submit" id="submit" name="submit" value="Submit" class="btn" />
+            </form>
+        </div>
+    </body>
+    
+</html>

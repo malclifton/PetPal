@@ -1,0 +1,127 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    line-height: 1.2;
+}
+
+body {
+    font-family: "Inter", -apple-system, Roboto, Helvetica, sans-serif;
+    overflow-x: hidden;
+    background-color: #f5f5f5;
+    
+}
+
+
+/* Links */
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Header Styles */
+.main-header {
+    background-color: #219ebc;
+    display: flex;
+    padding: 15px 50px;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.logo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+}
+
+.logo-text {
+    color: #ffffff;
+    font-size: 30px;
+    font-family: "Fredoka One", -apple-system, Roboto, Helvetica, sans-serif;
+    font-weight: 400;
+}
+
+.tagline {
+    color: #fb8500;
+    font-size: 8px;
+    font-weight: 700;
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.profile-photo img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.title h1 {
+    color: #ffffff;
+    font-size: 24px;
+    text-align: center;
+}
+
+/* Main Content */
+main {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    padding: 20px;
+    align-items: center;
+    margin-top: 150px;
+}
+
+.faq-tag, .help-ticket, .live-chat {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 25px;
+    border: 1px solid #ddd;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.faq-tag:hover, .help-ticket:hover, .live-chat:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.faq-tag span, .help-ticket span, .live-chat span {
+    font-size: 30px;
+    color: #219ebc;
+}
+
+.faq-tag h2, .help-ticket h2, .live-chat h2 {
+    font-size: 18px;
+    color: #333;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .main-header {
+        padding: 12px 20px;
+    }
+
+    .logo-text {
+        font-size: 26px;
+    }
+
+    .title h1 {
+        font-size: 20px;
+    }
+
+    main div {
+        width: 90%;
+        text-align: center;
+    }
+}
