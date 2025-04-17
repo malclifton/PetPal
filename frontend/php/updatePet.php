@@ -1,6 +1,8 @@
 <?php
 session_start();
 
+header('Content-Type: application/json');
+
 if (!isset($_SESSION["user_id"])) {
     echo json_encode(["success" => false, "message" => "User not logged in."]);
     exit;
@@ -8,14 +10,16 @@ if (!isset($_SESSION["user_id"])) {
 
 $config = require __DIR__ . '/config.php';
 
-$db_host = $config['db_host'];
-$db_user = $config['db_user'];
-$db_pass = $config['db_pass'];
-$db_name = $config['db_name'];
+$conn = new mysqli(
+    $config['db_host'],
+    $config['db_user'],
+    $config['db_pass'],
+    $config['db_name']
+);
 
-$conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
 if ($conn->connect_error) {
-    die(json_encode(["success" => false, "message" => "Connection failed: " . $conn->connect_error]));
+    echo json_encode(["success" => false, "message" => "Connection failed: " . $conn->connect_error]);
+    exit;
 }
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -35,8 +39,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $custom_notes = $_POST["custom_notes"] ?? null;
 
     $image_url = $_POST["current_image"] ?? null;
+
+    // Handle image upload
     if (isset($_FILES["pet-image"]) && $_FILES["pet-image"]["error"] === UPLOAD_ERR_OK) {
-        $upload_dir = __DIR__ . "/uploads/";
+        $upload_dir = __DIR__ . "/../uploads/";
         $relative_path = "uploads/";
 
         if (!is_dir($upload_dir)) {
@@ -61,6 +67,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
     }
 
+    // Update pets table
     $stmt = $conn->prepare(
         "UPDATE pets SET name = ?, species = ?, breed = ?, age = ?, weight = ?, health_notes = ? WHERE pet_id = ? AND owner_id = ?"
     );
@@ -71,6 +78,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $stmt->bind_param("sssssisi", $name, $species, $breed, $age, $weight, $health_notes, $pet_id, $owner_id);
 
     if ($stmt->execute()) {
+        // Update pet_profiles
         $profile_stmt = $conn->prepare(
             "UPDATE pet_profiles SET image_url = ?, favorite_toys = ?, favorite_foods = ?, personality = ?, special_needs = ?, custom_notes = ? WHERE pet_id = ?"
         );

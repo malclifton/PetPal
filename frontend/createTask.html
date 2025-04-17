@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PetPal - Habit Tracker</title>
     <link rel="stylesheet" href="./styles2.css" />
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <link rel="stylesheet" href="./css/material-icons.css">
 </head>
 
 <body>
@@ -24,30 +24,30 @@
                     </a>
                 </div>
                 <div class="close" id="close-btn">
-                    <span class="material-icons-sharp">close</span>
+                    <span class="material-icons">close</span>
                 </div>
             </div>
 
             <div class="sidebar">
                 <a href="./petOwnerDashboard.html" class="active">
-                    <span class="material-icons-sharp">home</span>
+                    <span class="material-icons">home</span>
                     <h3>Dashboard</h3>
                 </a>
                 <a href="./petProfile.html">
-                    <span class="material-icons-sharp">pets</span>
+                    <span class="material-icons">pets</span>
                     <h3>Pet Profile</h3>
                 </a>
                 <a href="./habitTracker.html">
-                    <span class="material-icons-sharp">edit_calendar</span>
+                    <span class="material-icons">event_note</span>
                     <h3>Habit Tracker</h3>
                 </a>
-                <a href="./hirePetSitter.html"><span class="material-icons-sharp">notifications_active</span>
-                    <h3>Contact Pet Sitters</h3>
+                <a href="./hirePetSitter.html"><span class="material-icons">notifications_active</span>
+                    <h3>Community</h3>
                 </a>
-                <a href="#"><span class="material-icons-sharp">help</span>
+                <a href="#"><span class="material-icons">help</span>
                     <h3>Support Center</h3>
                 </a>
-                <a href="#"><span class="material-icons-sharp">logout</span>
+                <a href="#"><span class="material-icons">exit_to_app</span>
                     <h3>Logout</h3>
                 </a>
             </div>
@@ -129,23 +129,24 @@
                 });
 
                 async function fetchTasks() {
-                    const res = await fetch("./php/fetchSchedules.php");
+                    const res = await fetch("./php/fetchSchedules.php?all=true");
                     const data = await res.json();
                     taskList.innerHTML = "";
                     data.forEach(task => {
                         const tr = document.createElement("tr");
                         tr.innerHTML = `
-                            <td>${task.task}</td>
-                            <td>${new Date(task.scheduled_time).toLocaleString()}</td>
-                            <td>${task.repeat_frequency}</td>
-                            <td>
-                                <button class="edit-btn">Edit</button>
-                                <button class="delete-btn" onclick="deleteTask(${task.id})">Delete</button>
-                            </td>
-                        `;
+            <td>${task.task}</td>
+            <td>${new Date(task.scheduled_time).toLocaleString()}</td>
+            <td>${task.repeat_frequency}</td>
+            <td>
+                <button class="edit-btn">Edit</button>
+                <button class="delete-btn" onclick="deleteTask(${task.id})">Delete</button>
+            </td>
+        `;
                         taskList.appendChild(tr);
                     });
                 }
+
 
                 async function deleteTask(taskId) {
                     const response = await fetch("./php/deleteSchedule.php", {
@@ -184,11 +185,11 @@
         <div class="right">
             <div class="top">
                 <button id="menu-btn">
-                    <span class="material-icons-sharp">menu</span>
+                    <span class="material-icons">menu</span>
                 </button>
                 <div class="theme-toggler">
-                    <span class="material-icons-sharp active">light_mode</span>
-                    <span class="material-icons-sharp">dark_mode</span>
+                    <span class="material-icons active">white-balance-sunny</span>
+                    <span class="material-icons">weather-night</span>
                 </div>
                 <div class="profile">
                     <div class="profile-info">
