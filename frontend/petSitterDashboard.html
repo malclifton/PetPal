@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE-edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles2.css">
+  <link rel="stylesheet" href="./styles2.css">
   <title>PetPal - For All Your Pet Needs</title>
   <!--Material Icons-->
   <link rel="stylesheet" href="./css/material-icons.css">
@@ -16,8 +16,8 @@
     <aside>
       <div class="top">
         <div class="logo">
-          <img src="./img/logo.png">
-          <a href="index.html" class="logo-link">
+          <img src="./img/logo.png" alt="PetPal Logo">
+          <a href="#" class="logo-link dashboard-link">
             <div class="logo-container">
               <h1 class="logo-text">petpal</h1>
               <p class="tagline">F O R A L L Y O U R P E T N E E D S</p>
@@ -33,19 +33,19 @@
           <span class="material-icons">home</span>
           <h3>Dashboard</h3>
         </a>
-        <a href="#">
+        <a href="./petProfile.html">
           <span class="material-icons">pets</span>
-          <h3>View Requests</h3>
+          <h3>Pet Profiles</h3>
         </a>
-        <a href="#">
+        <a href="./habitTracker.html">
           <span class="material-icons">event_note</span>
-          <h3>Manage Tasks</h3>
+          <h3>Habit Tracker</h3>
         </a>
-        <a href="#">
+        <a href="./hirePetSitter.html">
           <span class="material-icons">notifications_active</span>
-          <h3>Alerts/Reminders</h3>
+          <h3>Community</h3>
         </a>
-        <a href="#">
+        <a href="./supportDash.html">
           <span class="material-icons">help</span>
           <h3>Support Center</h3>
         </a>
@@ -60,7 +60,7 @@
       <h1>Dashboard</h1>
 
       <div class="date">
-        <input type="date">
+        <input type="date" id="datePicker">
       </div>
 
       <div class="info">
@@ -68,57 +68,39 @@
           <span class="material-icons">pets</span>
           <div class="middle">
             <h3>Requests</h3>
-            <h1>PlaceHolder for database</h1>
+            <ul id="request-list"></ul>
           </div>
-          <small class="text-muted">Last 24 hours</small>
+          <a href="#">
+            <small class="text-muted">View All Requests</small>
+          </a>
         </div>
         <!--------End of Request---------->
         <div class="tasks">
           <span class="material-icons">event_note</span>
           <div class="middle">
             <h3>Tasks</h3>
-            <h1>PlaceHolder for database</h1>
+            <ul id="dashboard-task-list"></ul>
           </div>
-          <small class="text-muted">Last 24 hours</small>
+          <a href="#">
+            <small class="text-muted">View All Tasks</small>
+          </a>
         </div>
         <!----End of Tasks------------->
         <div class="reminders">
           <span class="material-icons">notifications_active</span>
           <div class="middle">
             <h3>Reminders</h3>
-            <h1>PlaceHolder for database</h1>
+            <ul id="reminder-list"></ul>
           </div>
-          <small class="text-muted">Last 24 hours</small>
+          <a href="#">
+            <small class="text-muted">View All Reminders</small>
+          </a>
         </div>
         <!-----End of Reminders------>
       </div>
       <!--------End of info-------->
       <div class="recent-pet">
         <h2>Pets</h2>
-        <script>
-          // JavaScript code for fetching and updating the table
-          function fetchData() {
-            fetch('fetch_data.php')
-              .then(response => response.json())
-              .then(data => {
-                const table = document.getElementById('petTable');
-                table.innerHTML = ''; // Clear existing rows
-
-                data.forEach(row => {
-                  const tr = document.createElement('tr');
-                  Object.values(row).forEach(value => {
-                    const td = document.createElement('td');
-                    td.textContent = value;
-                    tr.appendChild(td);
-                  });
-                  table.appendChild(tr);
-                });
-              });
-          }
-
-          // Fetch data periodically
-          setInterval(fetchData, 5000);
-        </script>
         <table id="petTable">
           <thead>
             <tr>
@@ -146,12 +128,16 @@
         </div>
         <div class="profile">
           <div class="profile-info">
-            <p>Greetings, <b>Sitter</b></p>
-            <small class="text-muted">Sitter</small>
+            <p>Greetings, <b id="user-role">Sitter</b></p>
           </div>
           <div>
             <div class="profile-photo">
-              <img src="./img/profile_pic.png">
+              <form id="profileImageForm" enctype="multipart/form-data">
+                <input type="file" name="newProfileImage" id="newProfileImage" accept="image/*" style="display: none;" />
+                <label for="newProfileImage">
+                  <img id="profileImage" src="./img/profile_pic.png" alt="Profile Image" style="cursor: pointer;" />
+                </label>
+              </form>
             </div>
           </div>
         </div>
@@ -159,40 +145,90 @@
         <div class="recent-notifications">
           <h2>Recent Notifications</h2>
           <div class="notifications">
-            <div class="notification">
-              <div class="profile">
-                <img src="./img/profile_pic.png">
-              </div>
-              <div class="message">
-                <p><b>Owner 4</b>wants her dog walked at 4 pm.</p>
-                <small class="text-muted">2 minutes ago</small>
-              </div>
-            </div>
-            <div class="notification">
-              <div class="profile">
-                <img src="./img/profile_pic.png">
-              </div>
-              <div class="message">
-                <p><b>Owner 1</b>wants their cat fed at 6 am.</p>
-                <small class="text-muted">20 minutes ago</small>
-              </div>
-            </div>
-            <div class="notification">
-              <div class="profile">
-                <img src="./img/profile_pic.png">
-              </div>
-              <div class="message">
-                <p><b>Owner 3</b>wants his dog groomed at 4 pm Tuesday.</p>
-                <small class="text-muted">10 hours ago</small>
-              </div>
-            </div>
+            <!-- Notifications will be loaded from script.js -->
           </div>
         </div>
         <!-----End of Recent Notifications------->
       </div>
     </div>
   </div>
+  
+  <script>
+    // Initialize dashboard data
+    document.addEventListener('DOMContentLoaded', function() {
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('datePicker').value = today;
+      loadDashboardData(today);
+
+      // Load data when date changes
+      document.getElementById('datePicker').addEventListener('change', function(e) {
+        loadDashboardData(e.target.value);
+      });
+
+      function loadDashboardData(date) {
+        // Load requests
+        fetch(`php/fetchRequests.php?date=${date}`)
+          .then(response => response.json())
+          .then(data => {
+            const list = document.getElementById('request-list');
+            list.innerHTML = '';
+            
+            if (!data || data.length === 0) {
+              list.innerHTML = '<li>No requests today!</li>';
+              return;
+            }
+            
+            data.forEach(request => {
+              const li = document.createElement('li');
+              li.textContent = `${request.pet_name}: ${request.request_type}`;
+              list.appendChild(li);
+            });
+          });
+
+        // Load tasks (same as owner dashboard)
+        fetch(`php/fetchSchedules.php?date=${date}`)
+          .then(res => res.json())
+          .then(data => {
+            const list = document.getElementById('dashboard-task-list');
+            list.innerHTML = '';
+
+            if (!data || data.length === 0) {
+              list.innerHTML = '<li>No tasks today!</li>';
+              return;
+            }
+
+            data.forEach(task => {
+              const li = document.createElement('li');
+              const time = new Date(task.scheduled_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+              li.textContent = `${task.pet_name}: ${task.task} at ${time}`;
+              list.appendChild(li);
+            });
+          });
+
+        // Load reminders
+        fetch(`php/fetchReminders.php?date=${date}`)
+          .then(res => res.json())
+          .then(data => {
+            const list = document.getElementById('reminder-list');
+            list.innerHTML = '';
+
+            if (!data || data.length === 0) {
+              list.innerHTML = '<li>No reminders today!</li>';
+              return;
+            }
+
+            data.forEach(reminder => {
+              const li = document.createElement('li');
+              li.textContent = reminder.message;
+              list.appendChild(li);
+            });
+          });
+      }
+    });
+  </script>
+  
   <script src="./index.js"></script>
+  <script src="./script.js"></script>
 </body>
 
 </html>
