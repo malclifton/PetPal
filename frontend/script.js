@@ -7,9 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     */
   function fetchNotifications() {
-    fetch(
-      `https://codd.cs.gsu.edu/~mclifton6/petpal/backend/api/notifications/user/${userId}`
-    ) //This should point to the domain that the backend is runnning on
+    fetch() 
       .then((response) => response.json())
       .then((notifications) => {
         const container = document.querySelector(
