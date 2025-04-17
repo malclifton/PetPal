@@ -29,11 +29,11 @@
             </div>
 
             <div class="sidebar">
-                <a href="./petOwnerDashboard.html" class="active">
+                <a href="./petOwnerDashboard.html">
                     <span class="material-icons-sharp">home</span>
                     <h3>Dashboard</h3>
                 </a>
-                <a href="./petProfile.html">
+                <a href="./petProfile.html" class="active">
                     <span class="material-icons-sharp">pets</span>
                     <h3>Pet Profile</h3>
                 </a>
@@ -55,16 +55,18 @@
 
         <main>
             <h1>Pet Profile</h1>
-            <div class="info" id="pet-info">
+            <div id="pet-info">
                 <p id="no-pet-message">No pet found</p>
-                <button id="add-pet-btn" class="btn">Add a New Pet</button>
             </div>
+            <button id="add-pet-btn" class="btn">Add a New Pet</button>
+
             <div id="loading-spinner"></div>
 
             <div class="pet-form" id="pet-form" style="display: none;">
                 <form id="new-pet-form" enctype="multipart/form-data">
                     <input type="hidden" id="edit-pet-id" name="pet_id" />
                     <input type="hidden" id="current-image-url" name="current_image" />
+
                     <label for="pet-name">Pet Name</label>
                     <input type="text" id="pet-name" name="name" required />
 
@@ -100,12 +102,14 @@
 
                     <label for="custom-notes">Custom Notes</label>
                     <textarea id="custom-notes" name="custom_notes"></textarea>
-
+                    <br>
                     <label for="pet-image">Upload Pet Image</label>
                     <input type="file" id="pet-image" name="pet-image" accept="image/*" />
 
-                    <button type="submit" class="btn">Save Pet Profile</button>
-                    <button type="button" id="close-form-btn">Cancel</button>
+                    <div class="form-actions">
+                        <button type="submit" class="btn">Save</button>
+                        <button type="button" id="close-form-btn">Cancel</button>
+                    </div>
                 </form>
             </div>
         </main>
@@ -152,6 +156,7 @@
 
             addBtn.addEventListener("click", () => {
                 formElement.reset();
+                document.getElementById("edit-pet-id").value = "";
                 petForm.style.display = "block";
                 addBtn.style.display = "none";
             });
@@ -206,77 +211,69 @@
                     if (pets.length > 0) {
                         pets.forEach(pet => {
                             petInfoDiv.innerHTML += `
-            <div class="pet-card">
-              <h2>${pet.name}</h2>
-              <img src="${pet.image_url}" alt="Pet Image" width="200"><br>
-              <p><strong>Species:</strong> ${pet.species}</p>
-              <p><strong>Breed:</strong> ${pet.breed}</p>
-              <p><strong>Age:</strong> ${pet.age}</p>
-              <p><strong>Weight:</strong> ${pet.weight} kg</p>
-              <p><strong>Health Notes:</strong> ${pet.health_notes}</p>
-              <p><strong>Favorite Toys:</strong> ${pet.favorite_toys}</p>
-              <p><strong>Favorite Foods:</strong> ${pet.favorite_foods}</p>
-              <p><strong>Personality:</strong> ${pet.personality}</p>
-              <p><strong>Special Needs:</strong> ${pet.special_needs}</p>
-              <p><strong>Custom Notes:</strong> ${pet.custom_notes}</p>
-              <button class="btn edit-pet-btn"
-                data-id="${pet.pet_id}"
-                data-name="${pet.name}"
-                data-species="${pet.species}"
-                data-breed="${pet.breed}"
-                data-age="${pet.age}"
-                data-weight="${pet.weight}"
-                data-health_notes="${pet.health_notes}"
-                data-favorite_toys="${pet.favorite_toys}"
-                data-favorite_foods="${pet.favorite_foods}"
-                data-personality="${pet.personality}"
-                data-special_needs="${pet.special_needs}"
-                data-custom_notes="${pet.custom_notes}"
-                data-image_url="${pet.image_url}"
-              >Edit</button>
-              <button class="btn delete-pet-btn" data-id="${pet.pet_id}">Delete</button>
-            </div>
-          `;
+                            <div class="pet-card">
+                                <h2>${pet.name}</h2>
+                                <img src="${pet.image_url}" alt="Pet Image" width="200"><br>
+                                <p><strong>Species:</strong> ${pet.species}</p>
+                                <p><strong>Breed:</strong> ${pet.breed}</p>
+                                <p><strong>Age:</strong> ${pet.age}</p>
+                                <p><strong>Weight:</strong> ${pet.weight} kg</p>
+                                <p><strong>Health Notes:</strong> ${pet.health_notes}</p>
+                                <p><strong>Favorite Toys:</strong> ${pet.favorite_toys}</p>
+                                <p><strong>Favorite Foods:</strong> ${pet.favorite_foods}</p>
+                                <p><strong>Personality:</strong> ${pet.personality}</p>
+                                <p><strong>Special Needs:</strong> ${pet.special_needs}</p>
+                                <p><strong>Custom Notes:</strong> ${pet.custom_notes}</p>
+                                <button class="btn edit-pet-btn"
+                                    data-id="${pet.pet_id}"
+                                    data-name="${pet.name}"
+                                    data-species="${pet.species}"
+                                    data-breed="${pet.breed}"
+                                    data-age="${pet.age}"
+                                    data-weight="${pet.weight}"
+                                    data-health_notes="${pet.health_notes}"
+                                    data-favorite_toys="${pet.favorite_toys}"
+                                    data-favorite_foods="${pet.favorite_foods}"
+                                    data-personality="${pet.personality}"
+                                    data-special_needs="${pet.special_needs}"
+                                    data-custom_notes="${pet.custom_notes}"
+                                    data-image_url="${pet.image_url}"
+                                >Edit</button>
+                                <button class="btn delete-pet-btn" data-id="${pet.pet_id}">Delete</button>
+                            </div>
+                        `;
                         });
                     } else {
                         petInfoDiv.innerHTML = `<p id="no-pet-message">No pet found</p>`;
                     }
 
-                    const addNewBtn = document.createElement("button");
-                    addNewBtn.id = "add-pet-btn";
-                    addNewBtn.className = "btn";
-                    addNewBtn.textContent = "Add Another Pet";
-                    addNewBtn.addEventListener("click", () => {
-                        document.getElementById("new-pet-form").reset();
-                        document.getElementById("edit-pet-id").value = "";
-                        document.getElementById("current-image-url").value = "";
-                        document.getElementById("pet-form").style.display = "block";
-                        addNewBtn.style.display = "none";
-                    });
-
-                    petInfoDiv.appendChild(addNewBtn);
+                    document.getElementById("add-pet-btn").style.display = "block";
                     attachButtonListeners();
                 })
                 .catch(err => {
-                    console.error(err);
-                    alert("Failed to load pets.");
+                    console.error("Failed to fetch pets:", err);
                 })
                 .finally(() => {
                     spinner.style.display = "none";
                 });
         }
 
-
         function attachButtonListeners() {
             document.querySelectorAll(".edit-pet-btn").forEach(button => {
                 button.addEventListener("click", () => {
                     const form = document.getElementById("new-pet-form");
-                    const fields = ["id", "name", "species", "breed", "age", "weight", "health_notes", "favorite_toys", "favorite_foods", "personality", "special_needs", "custom_notes", "image_url"];
-                    fields.forEach(field => {
-                        const formField = form.querySelector(`[name="${field === 'id' ? 'pet_id' : field}"]`);
-                        if (formField) formField.value = button.dataset[field];
-                    });
-
+                    document.getElementById("edit-pet-id").value = button.dataset.id;
+                    form.name.value = button.dataset.name;
+                    form.species.value = button.dataset.species;
+                    form.breed.value = button.dataset.breed;
+                    form.age.value = button.dataset.age;
+                    form.weight.value = button.dataset.weight;
+                    form.health_notes.value = button.dataset.health_notes;
+                    form.favorite_toys.value = button.dataset.favorite_toys;
+                    form.favorite_foods.value = button.dataset.favorite_foods;
+                    form.personality.value = button.dataset.personality;
+                    form.special_needs.value = button.dataset.special_needs;
+                    form.custom_notes.value = button.dataset.custom_notes;
                     document.getElementById("current-image-url").value = button.dataset.image_url;
 
                     document.getElementById("pet-form").style.display = "block";
@@ -311,7 +308,6 @@
                     }
                 });
             });
-
         }
     </script>
 </body>

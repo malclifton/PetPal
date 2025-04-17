@@ -37,11 +37,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Handle image upload
     $image_url = null;
     if (isset($_FILES["pet-image"]) && $_FILES["pet-image"]["error"] === UPLOAD_ERR_OK) {
-        $upload_dir = __DIR__ . "/uploads/";
+        $upload_dir = __DIR__ . "uploads/";
         $relative_path = "uploads/";
 
         if (!is_dir($upload_dir)) {
-            mkdir($upload_dir, 777, true);
+            mkdir($upload_dir, 0777, true);
         }
 
         $file_tmp = $_FILES["pet-image"]["tmp_name"];

@@ -5,10 +5,11 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE-edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles2.css">
+    <link rel="stylesheet" href="./styles2.css">
     <title>PetPal - For All Your Pet Needs</title>
     <!--Material Icons-->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
 </head>
 
 <body>
@@ -43,7 +44,7 @@
                 </a>
                 <a href="./hirePetSitter.html">
                     <span class="material-icons-sharp">notifications_active</span>
-                    <h3>Contact Pet Sitters</h3>
+                    <h3>Community</h3>
                 </a>
                 <a href="#">
                     <span class="material-icons-sharp">help</span>
@@ -60,7 +61,7 @@
             <h1>Dashboard</h1>
 
             <div class="date">
-                <input type="date">
+                <input type="date" id="datePicker">
             </div>
 
             <div class="info">
@@ -69,50 +70,6 @@
                     <div class="middle">
                         <div id="todays-habits">
                             <h3>Today's Habits</h3>
-                            <script>
-                                /*Habit Tracking for Pet Owner Dahboard */
-                                function formatTime(timeStr) {
-                                    const [hour, minute] = timeStr.split(":");
-                                    const date = new Date();
-                                    date.setHours(hour, minute);
-                                    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-                                }
-
-                                function fetchTodaysHabits() {
-                                    const today = new Date().toISOString().split("T")[0];
-
-                                    fetch(`php/fetchHabits.php?date=${today}`)
-                                        .then((response) => {
-                                            if (!response.ok) throw new Error("Network response was not ok");
-                                            return response.json();
-                                        })
-                                        .then((data) => {
-                                            const list = document.getElementById("habit-list");
-                                            list.innerHTML = "";
-
-                                            if (data.length === 0) {
-                                                list.innerHTML = "<li>No habits today!</li>";
-                                                return;
-                                            }
-
-                                            data.forEach((habit) => {
-                                                const li = document.createElement("li");
-                                                const formattedTime = formatTime(habit.time);
-                                                li.textContent = `${habit.pet_name}: ${habit.habit_type} at ${formattedTime}`;
-                                                list.appendChild(li);
-                                            });
-                                        })
-                                        .catch((error) => {
-                                            console.error("Error fetching habits:", error);
-                                            document.getElementById("habit-list").innerHTML =
-                                                "<li>Error loading habits</li>";
-                                        });
-                                }
-
-                                fetchTodaysHabits();
-                                setInterval(fetchTodaysHabits, 3000);
-
-                            </script>
                             <ul id="habit-list"></ul>
                         </div>
                     </div>
@@ -125,10 +82,80 @@
                     <span class="material-icons-sharp">edit_calendar</span>
                     <div class="middle">
                         <h3>Tasks</h3>
-                        <h1>PlaceHolder for database</h1>
+                        <ul id="dashboard-task-list"></ul>
                     </div>
-                    <small class="text-muted">Last 24 hours</small>
+                    <a href="./createTask.html">
+                        <small class="text-muted">View All Tasks</small>
+                    </a>
                 </div>
+
+                <script>
+                    function formatTime(datetimeStr) {
+                        const date = new Date(datetimeStr);
+                        return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    }
+
+                    function loadDashboardData(selectedDate) {
+                        // Habits
+                        function convertTo12Hour(time24) {
+                            const [hour, minute] = time24.split(':');
+                            const h = parseInt(hour, 10);
+                            const period = h >= 12 ? 'PM' : 'AM';
+                            const hour12 = h % 12 || 12;
+                            return `${hour12}:${minute} ${period}`;
+                        }
+
+                        fetch(`php/fetchHabits.php?date=${selectedDate}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                const list = document.getElementById("habit-list");
+                                list.innerHTML = "";
+
+                                if (!data || data.length === 0) {
+                                    list.innerHTML = "<li>No habits today!</li>";
+                                    return;
+                                }
+
+                                data.forEach(habit => {
+                                    const li = document.createElement("li");
+                                    li.textContent = `${habit.pet_name}: ${habit.habit_type} at ${convertTo12Hour(habit.time)}`;
+                                    list.appendChild(li);
+                                });
+                            });
+
+
+                        // Tasks
+                        fetch(`php/fetchSchedules.php?date=${selectedDate}`)
+                            .then(res => res.json())
+                            .then(data => {
+                                const list = document.getElementById("dashboard-task-list");
+                                list.innerHTML = "";
+
+                                if (!data || data.length === 0) {
+                                    list.innerHTML = "<li>No tasks today!</li>";
+                                    return;
+                                }
+
+                                data.forEach(task => {
+                                    const li = document.createElement("li");
+                                    const time = formatTime(task.scheduled_time);
+                                    li.textContent = `${task.pet_name}: ${task.task} at ${time}`;
+                                    list.appendChild(li);
+                                });
+                            });
+                    }
+
+                    // Initial load
+                    const today = new Date().toISOString().split("T")[0];
+                    document.querySelector(".date input").value = today;
+                    loadDashboardData(today);
+
+                    // Load on date change
+                    document.querySelector(".date input").addEventListener("change", (e) => {
+                        loadDashboardData(e.target.value);
+                    });
+                </script>
+
                 <!----End of Tasks------------->
                 <div class="reminders">
                     <span class="material-icons-sharp">notifications_active</span>
@@ -150,7 +177,7 @@
                             .then(response => response.json())
                             .then(data => {
                                 const table = document.getElementById('petTable');
-                                table.innerHTML = ''; // Clear existing rows
+                                table.innerHTML = '';
 
                                 data.forEach(row => {
                                     const tr = document.createElement('tr');
@@ -198,43 +225,6 @@
                     </div>
                     <div>
                         <div class="profile-photo">
-                            <script>
-                                /*Change Profile*/
-                                document.addEventListener("DOMContentLoaded", () => {
-                                    fetch("/php/getOwnerProfile.php")
-                                        .then((response) => response.json())
-                                        .then((data) => {
-                                            if (data.name) {
-                                                document.getElementById("owner-name").innerHTML = data.name;
-                                            }
-                                            if (data.profile_image) {
-                                                document.getElementById("profileImage").src =
-                                                    data.profile_image + "?t=" + new Date().getTime();
-                                            }
-                                        });
-
-                                    document
-                                        .getElementById("newProfileImage")
-                                        .addEventListener("change", function () {
-                                            const form = document.getElementById("profileImageForm");
-                                            const formData = new FormData(form);
-
-                                            fetch("/php/updateProfileImage.php", {
-                                                method: "POST",
-                                                body: formData,
-                                            })
-                                                .then((res) => res.json())
-                                                .then((data) => {
-                                                    if (data.success) {
-                                                        document.getElementById("profileImage").src =
-                                                            data.new_image + "?" + new Date().getTime();
-                                                    } else {
-                                                        alert("Failed to update image: " + (data.error || "Unknown error"));
-                                                    }
-                                                });
-                                        });
-                                });
-                            </script>
                             <form id="profileImageForm" enctype="multipart/form-data">
                                 <input type="file" name="newProfileImage" id="newProfileImage" accept="image/*"
                                     style="display: none;" />

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PetPal - Habit Tracker</title>
+    <link rel="stylesheet" href="./styles2.css" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <aside>
+            <div class="top">
+                <div class="logo">
+                    <img src="./img/logo.png" />
+                    <a href="index.html" class="logo-link">
+                        <div class="logo-container">
+                            <h1 class="logo-text">petpal</h1>
+                            <p class="tagline">F O R A L L Y O U R P E T N E E D S</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="close" id="close-btn">
+                    <span class="material-icons-sharp">close</span>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <a href="./petOwnerDashboard.html" class="active">
+                    <span class="material-icons-sharp">home</span>
+                    <h3>Dashboard</h3>
+                </a>
+                <a href="./petProfile.html">
+                    <span class="material-icons-sharp">pets</span>
+                    <h3>Pet Profile</h3>
+                </a>
+                <a href="./habitTracker.html">
+                    <span class="material-icons-sharp">edit_calendar</span>
+                    <h3>Habit Tracker</h3>
+                </a>
+                <a href="./hirePetSitter.html"><span class="material-icons-sharp">notifications_active</span>
+                    <h3>Contact Pet Sitters</h3>
+                </a>
+                <a href="#"><span class="material-icons-sharp">help</span>
+                    <h3>Support Center</h3>
+                </a>
+                <a href="#"><span class="material-icons-sharp">logout</span>
+                    <h3>Logout</h3>
+                </a>
+            </div>
+        </aside>
+
+        <main>
+            <h1>Schedule a Task</h1>
+            <form id="taskForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="task">Task Name</label>
+                        <input type="text" name="task" id="task" placeholder="e.g., Feed Bella" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="scheduled_time">Scheduled Time</label>
+                        <input type="datetime-local" name="scheduled_time" id="scheduled_time" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="repeat_frequency">Repeat Frequency</label>
+                        <select name="repeat_frequency" id="repeat_frequency" required>
+                            <option value="none">None</option>
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly">Monthly</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="petSelect">Select Pet</label>
+                        <select name="pet_id" id="petSelect" required>
+                            <option value="">Select a pet</option>
+                        </select>
+                    </div>
+                </div>
+
+                <input type="hidden" name="owner_id" value="1">
+
+                <div class="form-submit">
+                    <button type="submit">Add Task</button>
+                </div>
+
+            </form>
+
+            <h2>All Tasks</h2>
+            <table class="habit-table" id="taskTable">
+                <thead>
+                    <tr>
+                        <th>Task</th>
+                        <th>Scheduled Time</th>
+                        <th>Repeat Frequency</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="taskList"></tbody>
+            </table>
+
+            <script>
+                const form = document.getElementById("taskForm");
+                const taskList = document.getElementById("taskList");
+
+                form.addEventListener("submit", async (e) => {
+                    e.preventDefault();
+                    const formData = new FormData(form);
+                    const response = await fetch("./php/saveSchedule.php", {
+                        method: "POST",
+                        body: formData
+                    });
+
+                    const result = await response.json();
+                    if (result.success) {
+                        form.reset();
+                        fetchTasks();
+                    } else {
+                        alert("Error: " + result.message);
+                        console.error(result.message);
+                    }
+                });
+
+                async function fetchTasks() {
+                    const res = await fetch("./php/fetchSchedules.php");
+                    const data = await res.json();
+                    taskList.innerHTML = "";
+                    data.forEach(task => {
+                        const tr = document.createElement("tr");
+                        tr.innerHTML = `
+                            <td>${task.task}</td>
+                            <td>${new Date(task.scheduled_time).toLocaleString()}</td>
+                            <td>${task.repeat_frequency}</td>
+                            <td>
+                                <button class="edit-btn">Edit</button>
+                                <button class="delete-btn" onclick="deleteTask(${task.id})">Delete</button>
+                            </td>
+                        `;
+                        taskList.appendChild(tr);
+                    });
+                }
+
+                async function deleteTask(taskId) {
+                    const response = await fetch("./php/deleteSchedule.php", {
+                        method: "POST",
+                        body: JSON.stringify({ id: taskId })
+                    });
+                    const result = await response.json();
+                    if (result.success) {
+                        fetchTasks();
+                    } else {
+                        alert("Error: " + result.message);
+                        console.error(result.message);
+                    }
+                }
+
+                fetchTasks();
+
+                async function loadPets() {
+                    const res = await fetch("./php/fetchPetsForOwner.php");
+                    const pets = await res.json();
+                    const select = document.getElementById("petSelect");
+
+                    pets.forEach(pet => {
+                        const option = document.createElement("option");
+                        option.value = pet.pet_id;
+                        option.textContent = pet.name;
+                        select.appendChild(option);
+                    });
+                }
+
+                loadPets();
+            </script>
+        </main>
+
+
+        <div class="right">
+            <div class="top">
+                <button id="menu-btn">
+                    <span class="material-icons-sharp">menu</span>
+                </button>
+                <div class="theme-toggler">
+                    <span class="material-icons-sharp active">light_mode</span>
+                    <span class="material-icons-sharp">dark_mode</span>
+                </div>
+                <div class="profile">
+                    <div class="profile-info">
+                        <p>Greetings, <b id="owner-name">Owner</b></p>
+                    </div>
+                    <div>
+                        <div class="profile-photo">
+                            <form id="profileImageForm" enctype="multipart/form-data">
+                                <input type="file" name="newProfileImage" id="newProfileImage" accept="image/*"
+                                    style="display: none;" />
+                                <label for="newProfileImage">
+                                    <img id="profileImage" src="./img/profile_pic.png" alt="Profile Image"
+                                        style="cursor: pointer;" />
+                                </label>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <script src="./index2.js"></script>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

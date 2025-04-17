@@ -111,7 +111,7 @@ if ($stmt->execute()) {
             $imageExtension = pathinfo($imageName, PATHINFO_EXTENSION);
             $uniqueName = uniqid("sitter_") . "." . $imageExtension;
 
-            $uploadDir = "./uploads/sitters/";
+            $upload_dir = realpath(__DIR__ . 'uploads/');
             if (!file_exists($uploadDir)) {
                 mkdir($uploadDir, 0777, true);
             }

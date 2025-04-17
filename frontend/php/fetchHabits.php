@@ -20,6 +20,7 @@ if ($conn->connect_error) {
     exit;
 }
 
+
 $date = $_GET['date'] ?? date('Y-m-d');
 
 $stmt = $conn->prepare("

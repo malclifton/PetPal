@@ -11,7 +11,7 @@ if (!$userId) {
 }
 
 if (!empty($_FILES['newProfileImage']['name'])) {
-    $target_dir = "/uploads/";
+    $upload_dir = realpath(__DIR__ . 'uploads/');
     if (!is_dir($target_dir)) {
         mkdir($target_dir, 0777, true);
     }

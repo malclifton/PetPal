@@ -10,17 +10,15 @@ if (!isset($_SESSION["user_id"])) {
 $config = require 'config.php';
 $conn = new mysqli($config['db_host'], $config['db_user'], $config['db_pass'], $config['db_name']);
 
-$sql = "SELECT ps.sitter_id, u.name, ps.experience_years, ps.availability, ps.bio, ps.profile_image_url
-        FROM pet_sitters ps
-        JOIN users u ON ps.sitter_id = u.user_id";
+$sql = "SELECT po.owner_id, u.name, u.email, po.profile_image
+        FROM pet_owners po
+        JOIN users u ON po.owner_id = u.user_id";
 $result = $conn->query($sql);
 
-$sitters = [];
+$owners = [];
 while ($row = $result->fetch_assoc()) {
-    $sitters[] = $row;
+    $owners[] = $row;
 }
 
-header(header: 'Content-Type: application/json');
-echo json_encode($sitters);
-
+echo json_encode($owners);
 $conn->close();

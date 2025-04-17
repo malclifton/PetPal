@@ -29,7 +29,7 @@
             </div>
 
             <div class="sidebar">
-                <a href="./petOwnerDashboard.html" class="active">
+                <a href="./petOwnerDashboard.html">
                     <span class="material-icons-sharp">home</span>
                     <h3>Dashboard</h3>
                 </a>
@@ -41,8 +41,9 @@
                     <span class="material-icons-sharp">edit_calendar</span>
                     <h3>Habit Tracker</h3>
                 </a>
-                <a href="./hirePetSitter.html"><span class="material-icons-sharp">notifications_active</span>
-                    <h3>Contact Pet Sitters</h3>
+                <a href="./hirePetSitter.html" class="active"><span
+                        class="material-icons-sharp">notifications_active</span>
+                    <h3>Community</h3>
                 </a>
                 <a href="#"><span class="material-icons-sharp">help</span>
                     <h3>Support Center</h3>
@@ -54,16 +55,23 @@
         </aside>
 
         <main>
-            <h1>Available Pet Sitters</h1>
+            <h1>Pet Owners</h1>
+            <div id="owner-list"></div>
+            <div id="chat-modal" class="modal">
+                <div id="chat-box" class="chat-box">
+                    <h2 id="chat-header"></h2>
+                    <div id="messages" class="chat-messages"></div>
+                    <textarea id="message-input" placeholder="Type your message..."></textarea>
+                    <div class="chat-buttons">
+                        <button onclick="sendMessage()">Send</button>
+                        <button onclick="closeChat()">Close Chat</button>
+                    </div>
+                </div>
+            </div>
+
+            <h1>Pet Sitters</h1>
             <div id="sitter-list"></div>
 
-            <div id="chat-box" style="display:none;">
-                <h2 id="chat-header"></h2>
-                <div id="messages" class="chat-messages"></div>
-                <textarea id="message-input" placeholder="Type your message..."></textarea>
-                <button onclick="sendMessage()">Send</button>
-                <button onclick="closeChat()">Close Chat</button>
-            </div>
         </main>
         <div class="right">
             <div class="top">
@@ -97,8 +105,17 @@
         </div>
     </div>
     <script>
-        const ownerId = 1;
+        let ownerId = null;
+
+        fetch('./php/getSessionUser.php')
+            .then(res => res.json())
+            .then(data => {
+                ownerId = data.user_id;
+                loadSitters();
+                loadOwners();
+            });
         let currentSitterId = null;
+        let currentOwnerChatId = null;
 
         function loadSitters() {
             fetch("./php/getSitters.php")
@@ -128,7 +145,6 @@
                         card.querySelector("button").onclick = () => openChat(sitter);
                         sitterList.appendChild(card);
                         btn.onclick = () => openChat(sitter);
-                        sitterList.appendChild(btn);
                     });
                 })
                 .catch(error => {
@@ -136,60 +152,116 @@
                 });
 
         }
+        function loadOwners() {
+            fetch("./php/getOwners.php")
+                .then(res => res.json())
+                .then(data => {
+                    const ownerList = document.getElementById("owner-list");
+                    ownerList.innerHTML = "";
+                    data.forEach(owner => {
+                        const card = document.createElement("div");
+                        card.classList.add("owner-card");
 
-        function openChat(sitter) {
-            currentSitterId = sitter.sitter_id;
-            document.getElementById("chat-header").textContent = `Chat with ${sitter.name}`;
-            document.getElementById("chat-box").style.display = "block";
-            fetchMessages();
-        }
-        function closeChat() {
-            document.getElementById("chat-box").style.display = "none";
-            currentSitterId = null;
-        }
+                        card.innerHTML = `
+                    <img src="${owner.profile_image || './img/profile_pic.png'}" alt="${owner.name}" class="owner-img" />
+                    <h3>${owner.name}</h3>
+                    <p><strong>Email:</strong> ${owner.email}</p>
+                    <button class="contact-btn" onclick="startChatWithOwner(${owner.owner_id}, '${owner.name}')">Message</button>
+                `;
 
-        function fetchMessages() {
-            fetch(`./php/getMessages.php?owner_id=${ownerId}&sitter_id=${currentSitterId}`)
-                .then(res => {
-                    if (!res.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return res.json();
+                        ownerList.appendChild(card);
+                    });
                 })
+                .catch(error => {
+                    console.error('Error fetching owners:', error);
+                });
+        }
+        function startChatWithOwner(ownerId, name) {
+            currentOwnerChatId = ownerId;
+            currentSitterId = null;
+            document.getElementById("chat-header").textContent = `Chat with ${name}`;
+            document.getElementById("chat-modal").style.display = "flex";
+            fetchOwnerMessages();
+        }
+
+        function fetchOwnerMessages() {
+            fetch(`./php/getOwnerMessages.php?owner1_id=${ownerId}&owner2_id=${currentOwnerChatId}`)
+                .then(res => res.json())
                 .then(data => {
                     const messagesDiv = document.getElementById("messages");
                     messagesDiv.innerHTML = "";
                     data.forEach(msg => {
                         const p = document.createElement("p");
-                        p.textContent = `${msg.sender_type}: ${msg.message}`;
+                        p.innerHTML = `<strong>${msg.sender}:</strong> ${msg.message}`;
                         messagesDiv.appendChild(p);
                     });
-                })
-                .catch(error => {
-                    console.error('There was an error fetching the messages:', error);
                 });
+        }
 
+
+
+        function openChat(sitter) {
+            currentSitterId = sitter.sitter_id;
+            document.getElementById("chat-header").textContent = `Chat with ${sitter.name}`;
+            document.getElementById("chat-modal").style.display = "flex";
+            fetchMessages();
+        }
+        function closeChat() {
+            document.getElementById("chat-modal").style.display = "none";
+            currentSitterId = null;
+            currentOwnerChatId = null;
+        }
+
+        function fetchMessages() {
+            fetch(`./php/getMessages.php?owner_id=${ownerId}&sitter_id=${currentSitterId}`)
+                .then(res => res.json())
+                .then(data => {
+                    const messagesDiv = document.getElementById("messages");
+                    messagesDiv.innerHTML = "";
+                    data.forEach(msg => {
+                        const p = document.createElement("p");
+                        p.innerHTML = `<strong>${msg.sender}:</strong> ${msg.message}`;
+                        messagesDiv.appendChild(p);
+                    });
+                });
         }
 
         function sendMessage() {
-            const msg = document.getElementById("message-input").value;
-            if (!msg.trim()) return;
-            fetch("./php/sendMessage.php", {
+            const msg = document.getElementById("message-input").value.trim();
+            if (!msg) return;
+
+            const endpoint = currentSitterId ? "./php/sendMessage.php" : "./php/sendOwnerMessage.php";
+            const body = {
+                sender_id: ownerId,
+                receiver_id: currentSitterId || currentOwnerChatId,
+                sender_type: currentSitterId ? "owner" : undefined,
+                message: msg
+            };
+
+            fetch(endpoint, {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    sender_id: ownerId,
-                    receiver_id: currentSitterId,
-                    sender_type: "owner",
-                    message: msg
-                })
+                body: JSON.stringify(body)
             }).then(() => {
                 document.getElementById("message-input").value = "";
-                fetchMessages();
+                const fetchFn = currentSitterId ? fetchMessages : fetchOwnerMessages;
+                fetchFn();
+                setTimeout(() => {
+                    const msgBox = document.getElementById("messages");
+                    msgBox.scrollTop = msgBox.scrollHeight;
+                }, 100);
             });
         }
 
-        loadSitters();
+
+        window.onclick = function (event) {
+            const modal = document.getElementById("chat-modal");
+            const box = document.getElementById("chat-box");
+            if (event.target === modal) {
+                closeChat();
+            }
+        };
+
     </script>
 </body>
 
