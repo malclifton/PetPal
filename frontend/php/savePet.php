@@ -35,13 +35,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $custom_notes = $_POST["custom_notes"] ?? null;
 
     // Handle image upload
-    $image_url = null;
     if (isset($_FILES["pet-image"]) && $_FILES["pet-image"]["error"] === UPLOAD_ERR_OK) {
-        $upload_dir = __DIR__ . "uploads/";
+        $upload_dir = __DIR__ . "../uploads/";
         $relative_path = "uploads/";
 
         if (!is_dir($upload_dir)) {
-            mkdir($upload_dir, 0777, true);
+            mkdir($upload_dir, 0755, true);
         }
 
         $file_tmp = $_FILES["pet-image"]["tmp_name"];
@@ -50,33 +49,30 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         if (move_uploaded_file($file_tmp, $target_path)) {
             $image_url = $relative_path . $file_name;
-            echo "File uploaded successfully! Image URL: " . $image_url;
         } else {
             echo json_encode(["success" => false, "message" => "Failed to upload image"]);
             exit;
         }
     }
+
     // Insert into pets table
-    $stmt = $conn->prepare("INSERT INTO pets (owner_id, name, species, breed, age, weight, health_notes) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    if (!$stmt) {
-        echo json_encode(["success" => false, "message" => "Prepare failed: " . $conn->error]);
-        exit;
-    }
-    $stmt->bind_param("isssids", $owner_id, $name, $species, $breed, $age, $weight, $health_notes);
+    $sql = "INSERT INTO pets (owner_id, name, species, breed, age, weight, health_notes) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("isssidd", $owner_id, $name, $species, $breed, $age, $weight, $health_notes);
 
     if ($stmt->execute()) {
         $pet_id = $stmt->insert_id;
 
         // Insert into pet_profiles table
         $profile_stmt = $conn->prepare(
-            "INSERT INTO pet_profiles (pet_id, image_url, favorite_toys, favorite_foods, personality, special_needs, custom_notes)
+            "INSERT INTO pet_profiles (pet_id, favorite_toys, favorite_foods, personality, special_needs, custom_notes, image_url)
              VALUES (?, ?, ?, ?, ?, ?, ?)"
         );
         if (!$profile_stmt) {
             echo json_encode(["success" => false, "message" => "Profile prepare failed: " . $conn->error]);
             exit;
         }
-        $profile_stmt->bind_param("issssss", $pet_id, $image_url, $favorite_toys, $favorite_foods, $personality, $special_needs, $custom_notes);
+        $profile_stmt->bind_param("issssss", $pet_id, $favorite_toys, $favorite_foods, $personality, $special_needs, $custom_notes, $image_url);
 
         if ($profile_stmt->execute()) {
             echo json_encode(["success" => true]);

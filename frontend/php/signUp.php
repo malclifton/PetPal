@@ -86,7 +86,7 @@ if ($stmt->execute()) {
         if (empty($ownerAddress)) {
             die("Address is required for pet owners.");
         }
-        $target_dir = "uploads/";
+        $target_dir = "../uploads/";
         $ownerProfileImage = null;
 
         if (!empty($_FILES["ownerProfileImage"]["name"])) {

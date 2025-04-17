@@ -12,6 +12,7 @@ if ($conn->connect_error) {
 
 $selectedDate = $_GET['date'] ?? date('Y-m-d');
 
+// Query to fetch tasks including repeat logic and pet name
 $sql = "
     SELECT s.task, s.scheduled_time, s.repeat_frequency, s.pet_id, p.name AS pet_name
     FROM schedules s

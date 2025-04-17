@@ -9,7 +9,8 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:8000") // put the domain that the php is hosted on 
+                .allowedOrigins("https://codd.cs.gsu.edu/~mclifton6/petpal/") // put the domain that the php is hosted
+                                                                              // on
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowedHeaders("*")
                 .allowCredentials(true);
