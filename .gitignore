@@ -51,3 +51,6 @@ application.properties
 .env
 backend/src/main/resources/application-dev.properties
 backend/src/main/resources/application-prod.properties
+/vendor
+composer.json
+composer.lock
